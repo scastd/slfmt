@@ -1,0 +1,16 @@
+#ifndef SLFMT_VERSION_H
+#define SLFMT_VERSION_H
+
+#pragma once
+
+#define SLFMT_VERSION_MAJOR 0
+#define SLFMT_VERSION_MINOR 1
+#define SLFMT_VERSION_PATCH 0
+
+#define SLFMT_VERSION                                        \
+  (SLFMT_VERSION_MAJOR * 10000 + SLFMT_VERSION_MINOR * 100 + \
+   SLFMT_VERSION_PATCH)
+
+#define SLFMT_VERSION_STRING "0.1.0"
+
+#endif // SLFMT_VERSION_H
