@@ -35,6 +35,8 @@ add_subdirectory(external/fmt)
 add_subdirectory(test)
 add_subdirectory(bench)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+# Add the include directory to the project (contains declaration for the library)
+add_subdirectory(include)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+add_executable(${PROJECT_NAME}_main src/main.cpp)
+target_link_libraries(${PROJECT_NAME}_main PRIVATE fmt::fmt)
