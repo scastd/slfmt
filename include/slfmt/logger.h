@@ -1,35 +1,71 @@
 #ifndef SLFMT_LOGGER_H
 #define SLFMT_LOGGER_H
 
-#include <string>
-#include <memory>
 #include <fmt/format.h>
-#include "fmt/format.h"
+
+#include <cxxabi.h>
+#include <memory>
+#include <string>
+
 #include "color.h"
+#include "fmt/format.h"
+
+#define CLASS_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
 
 namespace slfmt {
+    enum class Level {
+        TRACE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
+        FATAL
+    };
+
     class Logger {
     private:
         std::string clazz_;
 
-        Logger() = default;
-
         explicit Logger(std::string_view clazz) : clazz_(clazz) {}
+
+        void Log(const slfmt::Level &level, std::string_view msg) const {
+            if (level == slfmt::Level::TRACE) {
+                Trace(msg);
+            } else if (level == slfmt::Level::DEBUG) {
+                Debug(msg);
+            } else if (level == slfmt::Level::INFO) {
+                Info(msg);
+            } else if (level == slfmt::Level::WARN) {
+                Warn(msg);
+            } else if (level == slfmt::Level::ERROR) {
+                Error(msg);
+            } else if (level == slfmt::Level::FATAL) {
+                Fatal(msg);
+            }
+        }
 
     public:
         Logger(const Logger &) = delete;
-
         Logger(Logger &&) = delete;
-
         Logger &operator=(const Logger &) = delete;
-
         Logger &operator=(Logger &&) = delete;
-
         ~Logger() = default;
 
-        static std::unique_ptr<Logger> GetLogger(std::string_view c) {
-            return std::unique_ptr<Logger>(new Logger(c));
+        /**
+         * @brief Creates a new logger for the specified class.
+         * @tparam C The class to create a logger for.
+         * @return A new logger.
+         */
+        template<typename C>
+        static std::unique_ptr<Logger> GetLogger() {
+            const std::string &class_name = abi::__cxa_demangle(typeid(C).name(), nullptr, nullptr, nullptr);
+            return std::unique_ptr<Logger>(new Logger(class_name));
         };
+
+        template<typename... Args>
+        void Log(const slfmt::Level &level, std::string_view msg, Args... args) const {
+            Log(level, (std::string) fmt::format(msg, args...));
+        }
 
         /*-------------------------*/
         /* TRACE                   */
@@ -41,11 +77,7 @@ namespace slfmt {
 
         template<typename... Args>
         void Trace(std::string_view format, Args... args) const {
-            Trace(fmt::format(format, args...));
-        }
-
-        void Trace(std::string_view msg, const std::exception &e) const {
-            Trace(fmt::format(msg, e.what()));
+            Trace((std::string) fmt::format(format, args...));
         }
 
         /*-------------------------*/
@@ -58,11 +90,7 @@ namespace slfmt {
 
         template<typename... Args>
         void Debug(std::string_view format, Args... args) const {
-            Debug(fmt::format(format, args...));
-        }
-
-        void Debug(std::string_view msg, const std::exception &e) const {
-            Debug(fmt::format(msg, e.what()));
+            Debug((std::string) fmt::format(format, args...));
         }
 
         /*-------------------------*/
@@ -75,13 +103,8 @@ namespace slfmt {
 
         template<typename... Args>
         void Info(std::string_view format, Args... args) const {
-            Info(fmt::format(format, args...));
+            Info((std::string) fmt::format(format, args...));
         }
-
-        void Info(std::string_view msg, const std::exception &e) const {
-            Info(fmt::format(msg, e.what()));
-        }
-
 
         /*-------------------------*/
         /* WARNING				   */
@@ -93,11 +116,7 @@ namespace slfmt {
 
         template<typename... Args>
         void Warn(std::string_view format, Args... args) const {
-            Warn(fmt::format(format, args...));
-        }
-
-        void Warn(std::string_view msg, const std::exception &e) const {
-            Warn(fmt::format(msg, e.what()));
+            Warn((std::string) fmt::format(format, args...));
         }
 
         /*-------------------------*/
@@ -110,11 +129,7 @@ namespace slfmt {
 
         template<typename... Args>
         void Error(std::string_view format, Args... args) const {
-            Error(fmt::format(format, args...));
-        }
-
-        void Error(std::string_view msg, const std::exception &e) const {
-            Error(fmt::format(msg, e.what()));
+            Error((std::string) fmt::format(format, args...));
         }
 
         /*-------------------------*/
@@ -127,13 +142,9 @@ namespace slfmt {
 
         template<typename... Args>
         void Fatal(std::string_view format, Args... args) const {
-            Fatal(fmt::format(format, args...));
-        }
-
-        void Fatal(std::string_view msg, const std::exception &e) const {
-            Fatal(fmt::format(msg, e.what()));
+            Fatal((std::string) fmt::format(format, args...));
         }
     };
-}  // namespace slfmt
+} // namespace slfmt
 
 #endif // SLFMT_LOGGER_H

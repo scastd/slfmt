@@ -1,12 +1,20 @@
 #include <slfmt.h>
 
+class Example {
+private:
+    CLASS_LOGGER(logger_, Example);
+
+public:
+    Example() = default;
+
+    ~Example() = default;
+
+    static void test(const std::string &value) {
+        logger_->Debug("Called with \"{}\"", value);
+    }
+};
+
 int main(int, char *[]) {
-    const auto logger = slfmt::Logger::GetLogger("main");
-    logger->Trace("Hello, {}!", "world");
-    logger->Debug("Hello, {}!", "world");
-    logger->Info("Hello, {}!", "world");
-    logger->Warn("Hello, {}!", "world");
-    logger->Error("Hello, {}!", "world");
-    logger->Fatal("Hello, {}!", "world");
-	return 0;
+    Example::test("hello!");
+    return 0;
 }
