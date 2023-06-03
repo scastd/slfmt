@@ -28,7 +28,7 @@ namespace slfmt {
 
         explicit Logger(std::string_view clazz) : clazz_(clazz) {}
 
-        void Log(const slfmt::Level &level, std::string_view msg) const {
+        void Log_internal(const slfmt::Level &level, std::string_view msg) const {
             if (level == slfmt::Level::TRACE) {
                 Trace(msg);
             } else if (level == slfmt::Level::DEBUG) {
@@ -64,7 +64,7 @@ namespace slfmt {
 
         template<typename... Args>
         void Log(const slfmt::Level &level, std::string_view msg, Args... args) const {
-            Log(level, (std::string) fmt::format(msg, args...));
+            Log_internal(level, (std::string) fmt::format(msg, args...));
         }
 
         /*-------------------------*/
