@@ -4,37 +4,38 @@
 #include <fmt/color.h>
 
 namespace slfmt::color {
-	constexpr inline auto red = fg(fmt::color::red);
-	constexpr inline auto green = fg(fmt::color::green);
-	constexpr inline auto blue = fg(fmt::color::cornflower_blue);
-	constexpr inline auto yellow = fg(fmt::color::yellow);
-	constexpr inline auto cyan = fg(fmt::color::cyan);
-	constexpr inline auto magenta = fg(fmt::color::magenta);
-	constexpr inline auto white = fg(fmt::color::white);
-	constexpr inline auto gray = fg(fmt::color::gray);
-	constexpr inline auto black = fg(fmt::color::black);
+    inline const fmt::text_style red = fg(fmt::color::red);
+    inline const fmt::text_style green = fg(fmt::color::green);
+    inline const fmt::text_style blue = fg(fmt::color::cornflower_blue);
+    inline const fmt::text_style yellow = fg(fmt::color::yellow);
+    inline const fmt::text_style cyan = fg(fmt::color::cyan);
+    inline const fmt::text_style magenta = fg(fmt::color::magenta);
+    inline const fmt::text_style white = fg(fmt::color::white);
+    inline const fmt::text_style gray = fg(fmt::color::gray);
+    inline const fmt::text_style black = fg(fmt::color::black);
 
-	constexpr inline auto red_bg = bg(fmt::color::red);
-	constexpr inline auto green_bg = bg(fmt::color::green);
-	constexpr inline auto blue_bg = bg(fmt::color::cornflower_blue);
-	constexpr inline auto yellow_bg = bg(fmt::color::yellow);
-	constexpr inline auto cyan_bg = bg(fmt::color::cyan);
-	constexpr inline auto magenta_bg = bg(fmt::color::magenta);
-	constexpr inline auto white_bg = bg(fmt::color::white);
-	constexpr inline auto gray_bg = bg(fmt::color::gray);
-	constexpr inline auto black_bg = bg(fmt::color::black);
+    inline const fmt::text_style red_bg = bg(fmt::color::red);
+    inline const fmt::text_style green_bg = bg(fmt::color::green);
+    inline const fmt::text_style blue_bg = bg(fmt::color::cornflower_blue);
+    inline const fmt::text_style yellow_bg = bg(fmt::color::yellow);
+    inline const fmt::text_style cyan_bg = bg(fmt::color::cyan);
+    inline const fmt::text_style magenta_bg = bg(fmt::color::magenta);
+    inline const fmt::text_style white_bg = bg(fmt::color::white);
+    inline const fmt::text_style gray_bg = bg(fmt::color::gray);
+    inline const fmt::text_style black_bg = bg(fmt::color::black);
 
-	constexpr inline auto bold = fmt::emphasis::bold;
-	constexpr inline auto italic = fmt::emphasis::italic;
-	constexpr inline auto underline = fmt::emphasis::underline;
-	constexpr inline auto strikethrough = fmt::emphasis::strikethrough;
+    inline const fmt::text_style bold = fmt::emphasis::bold;
+    inline const fmt::text_style italic = fmt::emphasis::italic;
+    inline const fmt::text_style underline = fmt::emphasis::underline;
+    inline const fmt::text_style strikethrough = fmt::emphasis::strikethrough;
 
-	constexpr inline auto TRACE_COLOR = white;
-	constexpr inline auto DEBUG_COLOR = magenta;
-	constexpr inline auto INFO_COLOR = blue;
-	constexpr inline auto WARN_COLOR = yellow;
-	constexpr inline auto ERROR_COLOR = red;
-	constexpr inline auto FATAL_COLOR = red | bold | underline;
-}
+    inline const fmt::text_style TRACE_COLOR = white;
+    inline const fmt::text_style DEBUG_COLOR = magenta;
+    inline const fmt::text_style INFO_COLOR = blue;
+    inline const fmt::text_style WARN_COLOR = yellow;
+    inline const fmt::text_style ERROR_COLOR = red;
+    inline const fmt::text_style FATAL_COLOR = red | bold | underline;
+    inline const fmt::text_style NO_COLOR = fmt::text_style();
+} // namespace slfmt::color
 
 #endif // SLFMT_COLOR_H
