@@ -23,7 +23,7 @@
 
 #define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
 
-static const inline std::string SLFMT_LOG_FORMAT = "[{}] {}: {}\n";
+static const inline std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
 
 namespace slfmt {
     class Logger {
