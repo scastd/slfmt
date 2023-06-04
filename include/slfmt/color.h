@@ -1,3 +1,14 @@
+/*
+ * slfmt - A simple logging library for C++
+ *
+ * color.h - Color definitions for slfmt
+ *
+ * Copyright (c) 2023 Samuel Castrillo Domínguez
+ * All rights reserved.
+ *
+ * For more information, please see the LICENSE file.
+ */
+
 #ifndef SLFMT_COLOR_H
 #define SLFMT_COLOR_H
 

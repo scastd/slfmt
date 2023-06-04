@@ -1,3 +1,14 @@
+/*
+ * slfmt - A simple logging library for C++
+ *
+ * version.h - Version information
+ *
+ * Copyright (c) 2023 Samuel Castrillo Domínguez
+ * All rights reserved.
+ *
+ * For more information, please see the LICENSE file.
+ */
+
 #ifndef SLFMT_VERSION_H
 #define SLFMT_VERSION_H
 

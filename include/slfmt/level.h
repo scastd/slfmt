@@ -1,3 +1,14 @@
+/*
+ * slfmt - A simple logging library for C++
+ *
+ * level.h - Log levels for slfmt
+ *
+ * Copyright (c) 2023 Samuel Castrillo Domínguez
+ * All rights reserved.
+ *
+ * For more information, please see the LICENSE file.
+ */
+
 #ifndef SLFMT_LEVEL_H
 #define SLFMT_LEVEL_H
 
