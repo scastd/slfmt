@@ -9,7 +9,9 @@
 #include "color.h"
 #include "fmt/format.h"
 
-#define CLASS_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
+#define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
+
+static const inline std::string SLFMT_LOG_FORMAT = "[{}] {}: {}\n";
 
 namespace slfmt {
     /**
@@ -97,7 +99,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Trace(std::string_view msg) const {
-            fmt::print(slfmt::color::TRACE_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::TRACE_COLOR, SLFMT_LOG_FORMAT, "TRACE", clazz_, msg);
         }
 
         /**
@@ -118,7 +120,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Debug(std::string_view msg) const {
-            fmt::print(slfmt::color::DEBUG_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::DEBUG_COLOR, SLFMT_LOG_FORMAT, "DEBUG", clazz_, msg);
         }
 
         /**
@@ -139,7 +141,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Info(std::string_view msg) const {
-            fmt::print(slfmt::color::INFO_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::INFO_COLOR, SLFMT_LOG_FORMAT, "INFO", clazz_, msg);
         }
 
         /**
@@ -160,7 +162,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Warn(std::string_view msg) const {
-            fmt::print(slfmt::color::WARN_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::WARN_COLOR, SLFMT_LOG_FORMAT, "WARN", clazz_, msg);
         }
 
         /**
@@ -181,7 +183,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Error(std::string_view msg) const {
-            fmt::print(slfmt::color::ERROR_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::ERROR_COLOR, SLFMT_LOG_FORMAT, "ERROR", clazz_, msg);
         }
 
         /**
@@ -202,7 +204,7 @@ namespace slfmt {
          * @param msg The message to log.
          */
         void Fatal(std::string_view msg) const {
-            fmt::print(slfmt::color::FATAL_COLOR, "{}: {}\n", clazz_, msg);
+            fmt::print(slfmt::color::FATAL_COLOR, SLFMT_LOG_FORMAT, "FATAL", clazz_, msg);
         }
 
         /**

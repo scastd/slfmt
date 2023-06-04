@@ -2,18 +2,18 @@
 
 class Example {
 private:
-    CLASS_LOGGER(logger_, Example);
+    SLFMT_LOGGER(logger_, Example);
 
 public:
     Example() = default;
     ~Example() = default;
 
     static void test(const std::string &value) {
-        logger_->Debug("Called with \"{}\", {}", value, SLFMT_VERSION_STRING);
+        logger_->Debug("Hello {}", value);
     }
 };
 
 int main(int, char *[]) {
-    Example::test("hello!");
+    Example::test("world!");
     return 0;
 }
