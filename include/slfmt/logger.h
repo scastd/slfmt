@@ -1,9 +1,8 @@
 #ifndef SLFMT_LOGGER_H
 #define SLFMT_LOGGER_H
 
-#include <fmt/format.h>
-
 #include <cxxabi.h>
+#include <fmt/format.h>
 #include <memory>
 #include <string>
 
@@ -13,6 +12,9 @@
 #define CLASS_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
 
 namespace slfmt {
+    /**
+     * @brief Log levels.
+     */
     enum class Level {
         TRACE,
         DEBUG,
@@ -24,10 +26,23 @@ namespace slfmt {
 
     class Logger {
     private:
+        /**
+         * @brief Class name for the logger.
+         */
         std::string clazz_;
 
+        /**
+         * @brief Constructs a new logger for the specified class.
+         * @param clazz The class to create a logger for.
+         */
         explicit Logger(std::string_view clazz) : clazz_(clazz) {}
 
+        /**
+         * @brief Logs a message at the specified level.
+         *
+         * @param level The level to log at.
+         * @param msg The message to log.
+         */
         void Log_internal(const slfmt::Level &level, std::string_view msg) const {
             if (level == slfmt::Level::TRACE) {
                 Trace(msg);
@@ -53,6 +68,7 @@ namespace slfmt {
 
         /**
          * @brief Creates a new logger for the specified class.
+         *
          * @tparam C The class to create a logger for.
          * @return A new logger.
          */
@@ -62,84 +78,140 @@ namespace slfmt {
             return std::unique_ptr<Logger>(new Logger(class_name));
         };
 
+        /**
+         * @brief Logs a message at the specified level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param level The level to log at.
+         * @param msg The message to log.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Log(const slfmt::Level &level, std::string_view msg, Args... args) const {
             Log_internal(level, (std::string) fmt::format(msg, args...));
         }
 
-        /*-------------------------*/
-        /* TRACE                   */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the TRACE level.
+         *
+         * @param msg The message to log.
+         */
         void Trace(std::string_view msg) const {
             fmt::print(slfmt::color::TRACE_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the TRACE level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Trace(std::string_view format, Args... args) const {
             Trace((std::string) fmt::format(format, args...));
         }
 
-        /*-------------------------*/
-        /* DEBUG                   */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the DEBUG level.
+         *
+         * @param msg The message to log.
+         */
         void Debug(std::string_view msg) const {
             fmt::print(slfmt::color::DEBUG_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the DEBUG level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Debug(std::string_view format, Args... args) const {
             Debug((std::string) fmt::format(format, args...));
         }
 
-        /*-------------------------*/
-        /* INFO                    */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the INFO level.
+         *
+         * @param msg The message to log.
+         */
         void Info(std::string_view msg) const {
             fmt::print(slfmt::color::INFO_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the INFO level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Info(std::string_view format, Args... args) const {
             Info((std::string) fmt::format(format, args...));
         }
 
-        /*-------------------------*/
-        /* WARNING				   */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the WARN level.
+         *
+         * @param msg The message to log.
+         */
         void Warn(std::string_view msg) const {
             fmt::print(slfmt::color::WARN_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the WARN level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Warn(std::string_view format, Args... args) const {
             Warn((std::string) fmt::format(format, args...));
         }
 
-        /*-------------------------*/
-        /* ERROR                   */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the ERROR level.
+         *
+         * @param msg The message to log.
+         */
         void Error(std::string_view msg) const {
             fmt::print(slfmt::color::ERROR_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the ERROR level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Error(std::string_view format, Args... args) const {
             Error((std::string) fmt::format(format, args...));
         }
 
-        /*-------------------------*/
-        /* FATAL                   */
-        /*-------------------------*/
-
+        /**
+         * @brief Logs a message at the FATAL level.
+         *
+         * @param msg The message to log.
+         */
         void Fatal(std::string_view msg) const {
             fmt::print(slfmt::color::FATAL_COLOR, "{}: {}\n", clazz_, msg);
         }
 
+        /**
+         * @brief Logs a message at the FATAL level.
+         *
+         * @tparam Args The types of the arguments to format the message with.
+         * @param format The format string.
+         * @param args The arguments to format the message with.
+         */
         template<typename... Args>
         void Fatal(std::string_view format, Args... args) const {
             Fatal((std::string) fmt::format(format, args...));

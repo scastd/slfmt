@@ -6,11 +6,10 @@ private:
 
 public:
     Example() = default;
-
     ~Example() = default;
 
     static void test(const std::string &value) {
-        logger_->Debug("Called with \"{}\"", value);
+        logger_->Debug("Called with \"{}\", {}", value, SLFMT_VERSION_STRING);
     }
 };
 
