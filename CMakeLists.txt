@@ -10,21 +10,37 @@ option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
 
 # Configure optimization
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(OPTIMIZATION_FLAGS "-O0 -DDEBUG")
+    if (MSVC)
+        set(OPTIMIZATION_FLAGS "/Od /D \"_DEBUG\"")
+    else ()
+        set(OPTIMIZATION_FLAGS "-O0 -DDEBUG")
+    endif ()
     message("-- Configuring debug build")
 else ()
-    set(OPTIMIZATION_FLAGS "-O3 -DNDEBUG")
+    if (MSVC)
+        set(OPTIMIZATION_FLAGS "/O2 /D \"NDEBUG\"")
+    else ()
+        set(OPTIMIZATION_FLAGS "-O3 -DNDEBUG")
+    endif ()
     message("-- Configuring release build")
 endif ()
 
-# Enable extra warnings to adhere to https://github.com/mapbox/cpp/issues/37
-set(DESIRED_WARNINGS "-Wall -Wextra -Wconversion -Wunreachable-code -Wuninitialized -pedantic-errors -Wold-style-cast -Wno-error=unused-variable -Wshadow -Wfloat-equal -Weffc++")
+# Enable extra warnings
+set(DESIRED_WARNINGS "-Wall -Wextra -Wconversion -Wunreachable-code -Wno-error=unused-variable -Wshadow -Wfloat-equal")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(DESIRED_WARNINGS "${DESIRED_WARNINGS} -pedantic-errors -Wold-style-cast -Weffc++ -Wuninitialized")
+endif ()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(DESIRED_WARNINGS "${DESIRED_WARNINGS} -Wmost")
 endif ()
 
 if (WERROR)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+    if (MSVC)
+        set(ERROR_FLAG "/WX")
+    else ()
+        set(ERROR_FLAG "-Werror")
+    endif ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ERROR_FLAG}")
 endif ()
 
 # Include all the source headers of the library

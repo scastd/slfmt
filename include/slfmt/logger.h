@@ -12,7 +12,12 @@
 #ifndef SLFMT_LOGGER_H
 #define SLFMT_LOGGER_H
 
+#if defined(__GNUC__) || defined(__clang__)
 #include <cxxabi.h>
+#elif defined(_MSC_VER)
+#include <typeinfo>
+#endif
+
 #include <fmt/format.h>
 #include <memory>
 #include <string>
@@ -76,7 +81,12 @@ namespace slfmt {
          */
         template<typename C>
         static std::unique_ptr<Logger> GetLogger() {
+#if defined(__GNUC__) || defined(__clang__)
             const std::string &class_name = abi::__cxa_demangle(typeid(C).name(), nullptr, nullptr, nullptr);
+#elif defined(_WIN32) || defined(_WIN64)
+            const std::string &aux = typeid(C).name();
+            const std::string &class_name = aux.substr(aux.find_last_of(' ') + 1); // Remove the "class" prefix
+#endif
             return std::unique_ptr<Logger>(new Logger(class_name));
         };
 
@@ -89,7 +99,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Log(const slfmt::Level &level, std::string_view msg, Args&&... args) const {
+        void Log(const slfmt::Level &level, std::string_view msg, Args &&...args) const {
             Log_internal(level, (std::string) fmt::vformat(msg, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -110,7 +120,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Trace(std::string_view format, Args&&... args) const {
+        void Trace(std::string_view format, Args &&...args) const {
             Trace((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -131,7 +141,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Debug(std::string_view format, Args&&... args) const {
+        void Debug(std::string_view format, Args &&...args) const {
             Debug((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -152,7 +162,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Info(std::string_view format, Args&&... args) const {
+        void Info(std::string_view format, Args &&...args) const {
             Info((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -173,7 +183,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Warn(std::string_view format, Args&&... args) const {
+        void Warn(std::string_view format, Args &&...args) const {
             Warn((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -194,7 +204,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Error(std::string_view format, Args&&... args) const {
+        void Error(std::string_view format, Args &&...args) const {
             Error((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
 
@@ -215,7 +225,7 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Fatal(std::string_view format, Args&&... args) const {
+        void Fatal(std::string_view format, Args &&...args) const {
             Fatal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
     };

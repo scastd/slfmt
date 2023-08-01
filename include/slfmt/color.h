@@ -15,6 +15,45 @@
 #include <fmt/color.h>
 
 namespace slfmt::color {
+#ifdef _WIN32
+    // This is a hack to remove colors on Windows because fmt::text_style doesn't work on Windows.
+    // Temporary solution until fmt::text_style works on Windows.
+    inline const fmt::text_style NO_COLOR = fmt::text_style();
+
+    inline const fmt::text_style red = NO_COLOR;
+    inline const fmt::text_style green = NO_COLOR;
+    inline const fmt::text_style blue = NO_COLOR;
+    inline const fmt::text_style yellow = NO_COLOR;
+    inline const fmt::text_style cyan = NO_COLOR;
+    inline const fmt::text_style magenta = NO_COLOR;
+    inline const fmt::text_style white = NO_COLOR;
+    inline const fmt::text_style gray = NO_COLOR;
+    inline const fmt::text_style black = NO_COLOR;
+
+    inline const fmt::text_style red_bg = NO_COLOR;
+    inline const fmt::text_style green_bg = NO_COLOR;
+    inline const fmt::text_style blue_bg = NO_COLOR;
+    inline const fmt::text_style yellow_bg = NO_COLOR;
+    inline const fmt::text_style cyan_bg = NO_COLOR;
+    inline const fmt::text_style magenta_bg = NO_COLOR;
+    inline const fmt::text_style white_bg = NO_COLOR;
+    inline const fmt::text_style gray_bg = NO_COLOR;
+    inline const fmt::text_style black_bg = NO_COLOR;
+
+    inline const fmt::text_style bold = NO_COLOR;
+    inline const fmt::text_style italic = NO_COLOR;
+    inline const fmt::text_style underline = NO_COLOR;
+    inline const fmt::text_style strikethrough = NO_COLOR;
+
+    inline const fmt::text_style TRACE_COLOR = NO_COLOR;
+    inline const fmt::text_style DEBUG_COLOR = NO_COLOR;
+    inline const fmt::text_style INFO_COLOR = NO_COLOR;
+    inline const fmt::text_style WARN_COLOR = NO_COLOR;
+    inline const fmt::text_style ERROR_COLOR = NO_COLOR;
+    inline const fmt::text_style FATAL_COLOR = NO_COLOR;
+#else
+    inline const fmt::text_style NO_COLOR = fmt::text_style();
+
     inline const fmt::text_style red = fg(fmt::color::red);
     inline const fmt::text_style green = fg(fmt::color::green);
     inline const fmt::text_style blue = fg(fmt::color::cornflower_blue);
@@ -46,7 +85,7 @@ namespace slfmt::color {
     inline const fmt::text_style WARN_COLOR = yellow;
     inline const fmt::text_style ERROR_COLOR = red;
     inline const fmt::text_style FATAL_COLOR = red | bold | underline;
-    inline const fmt::text_style NO_COLOR = fmt::text_style();
+#endif
 } // namespace slfmt::color
 
 #endif // SLFMT_COLOR_H
