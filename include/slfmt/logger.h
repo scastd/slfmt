@@ -12,12 +12,6 @@
 #ifndef SLFMT_LOGGER_H
 #define SLFMT_LOGGER_H
 
-#if defined(__GNUC__) || defined(__clang__)
-#include <cxxabi.h>
-#elif defined(_MSC_VER)
-#include <typeinfo>
-#endif
-
 #include <fmt/format.h>
 #include <memory>
 #include <string>
@@ -25,6 +19,12 @@
 #include "color.h"
 #include "fmt/format.h"
 #include "level.h"
+
+#if defined(_WIN32)
+#include <typeinfo>
+#else // Linux and macOS
+#include <cxxabi.h>
+#endif
 
 #define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
 
@@ -81,11 +81,11 @@ namespace slfmt {
          */
         template<typename C>
         static std::unique_ptr<Logger> GetLogger() {
-#if defined(__GNUC__) || defined(__clang__)
-            const std::string &class_name = abi::__cxa_demangle(typeid(C).name(), nullptr, nullptr, nullptr);
-#elif defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
             const std::string &aux = typeid(C).name();
             const std::string &class_name = aux.substr(aux.find_last_of(' ') + 1); // Remove the "class" prefix
+#else                                                                              // Linux and macOS
+            const std::string &class_name = abi::__cxa_demangle(typeid(C).name(), nullptr, nullptr, nullptr);
 #endif
             return std::unique_ptr<Logger>(new Logger(class_name));
         };
