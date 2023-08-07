@@ -20,13 +20,7 @@
 #include "fmt/format.h"
 #include "level.h"
 
-#if defined(_WIN32)
-#include <typeinfo>
-#else // Linux and macOS
-#include <cxxabi.h>
-#endif
-
-#define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger<clazz>()
+#define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger(#clazz)
 
 static const inline std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
 
@@ -76,19 +70,13 @@ namespace slfmt {
         /**
          * @brief Creates a new logger for the specified class.
          *
-         * @tparam C The class to create a logger for.
+         * @param clazz The class to create a logger for.
+         *
          * @return A new logger.
          */
-        template<typename C>
-        static std::unique_ptr<Logger> GetLogger() {
-#if defined(_WIN32)
-            const std::string &aux = typeid(C).name();
-            const std::string &class_name = aux.substr(aux.find_last_of(' ') + 1); // Remove the "class" prefix
-#else                                                                              // Linux and macOS
-            const std::string &class_name = abi::__cxa_demangle(typeid(C).name(), nullptr, nullptr, nullptr);
-#endif
-            return std::unique_ptr<Logger>(new Logger(class_name));
-        };
+        static std::unique_ptr<Logger> GetLogger(std::string_view clazz) {
+            return std::unique_ptr<Logger>(new Logger(clazz));
+        }
 
         /**
          * @brief Logs a message at the specified level.
