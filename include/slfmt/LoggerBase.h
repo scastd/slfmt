@@ -1,7 +1,7 @@
 /*
  * slfmt - A simple logging library for C++
  *
- * logger.h - Logger class for slfmt
+ * LoggerBase.h - Logger interface for slfmt
  *
  * Copyright (c) 2023 Samuel Castrillo Domínguez
  * All rights reserved.
@@ -9,34 +9,26 @@
  * For more information, please see the LICENSE file.
  */
 
-#ifndef SLFMT_LOGGER_H
-#define SLFMT_LOGGER_H
+#ifndef SLFMT_LOGGER_BASE_H
+#define SLFMT_LOGGER_BASE_H
 
 #include <fmt/format.h>
 #include <memory>
 #include <string>
 
 #include "Color.h"
-#include "Level.h"
 #include "fmt/format.h"
-
-#define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger(#clazz)
+#include "Level.h"
 
 static const inline std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
 
 namespace slfmt {
-    class Logger {
+    class LoggerBase {
     private:
         /**
          * @brief Class name for the logger.
          */
-        std::string clazz_;
-
-        /**
-         * @brief Constructs a new logger for the specified class.
-         * @param clazz The class to create a logger for.
-         */
-        explicit Logger(std::string_view clazz) : clazz_(clazz) {}
+        const std::string m_class;
 
         /**
          * @brief Logs a message at the specified level.
@@ -60,23 +52,30 @@ namespace slfmt {
             }
         }
 
-    public:
-        Logger(const Logger &) = delete;
-        Logger(Logger &&) = delete;
-        Logger &operator=(const Logger &) = delete;
-        Logger &operator=(Logger &&) = delete;
-        ~Logger() = default;
-
+    protected:
         /**
-         * @brief Creates a new logger for the specified class.
+         * @brief Constructs a new logger for the specified class.
          *
          * @param clazz The class to create a logger for.
-         *
-         * @return A new logger.
          */
-        static std::unique_ptr<Logger> GetLogger(std::string_view clazz) {
-            return std::unique_ptr<Logger>(new Logger(clazz));
+        explicit LoggerBase(std::string_view clazz) : m_class(clazz) {}
+
+        /**
+         * @brief Gets the class name for the logger.
+         *
+         * @return The class name for the logger.
+         */
+        FMT_NODISCARD std::string_view GetClass() const {
+            return m_class;
         }
+
+    public:
+        LoggerBase(const LoggerBase &) = delete;
+        LoggerBase(LoggerBase &&) = delete;
+        LoggerBase &operator=(const LoggerBase &) = delete;
+        LoggerBase &operator=(LoggerBase &&) = delete;
+
+        virtual ~LoggerBase() = default;
 
         /**
          * @brief Logs a message at the specified level.
@@ -96,9 +95,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Trace(std::string_view msg) const {
-            fmt::print(slfmt::color::TRACE_COLOR, SLFMT_LOG_FORMAT, "TRACE", clazz_, msg);
-        }
+        virtual void Trace(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the TRACE level.
@@ -117,9 +114,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Debug(std::string_view msg) const {
-            fmt::print(slfmt::color::DEBUG_COLOR, SLFMT_LOG_FORMAT, "DEBUG", clazz_, msg);
-        }
+        virtual void Debug(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the DEBUG level.
@@ -138,9 +133,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Info(std::string_view msg) const {
-            fmt::print(slfmt::color::INFO_COLOR, SLFMT_LOG_FORMAT, "INFO", clazz_, msg);
-        }
+        virtual void Info(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the INFO level.
@@ -159,9 +152,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Warn(std::string_view msg) const {
-            fmt::print(slfmt::color::WARN_COLOR, SLFMT_LOG_FORMAT, "WARN", clazz_, msg);
-        }
+        virtual void Warn(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the WARN level.
@@ -180,9 +171,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Error(std::string_view msg) const {
-            fmt::print(slfmt::color::ERROR_COLOR, SLFMT_LOG_FORMAT, "ERROR", clazz_, msg);
-        }
+        virtual void Error(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the ERROR level.
@@ -201,9 +190,7 @@ namespace slfmt {
          *
          * @param msg The message to log.
          */
-        void Fatal(std::string_view msg) const {
-            fmt::print(slfmt::color::FATAL_COLOR, SLFMT_LOG_FORMAT, "FATAL", clazz_, msg);
-        }
+        virtual void Fatal(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the FATAL level.
@@ -219,4 +206,4 @@ namespace slfmt {
     };
 } // namespace slfmt
 
-#endif // SLFMT_LOGGER_H
+#endif // SLFMT_LOGGER_BASE_H

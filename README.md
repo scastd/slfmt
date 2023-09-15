@@ -34,10 +34,10 @@ class:
 SLFMT_LOGGER(logger, Class);
 ```
 
-The second is to use the `slfmt::Logger::GetLogger` method:
+The second is to use the `slfmt::Logger::GetConsoleLogger` method:
 
 ```c++
-static inline const auto logger = slfmt::Logger::GetLogger<Class>();
+static inline const auto logger = slfmt::Logger::GetConsoleLogger<Class>();
 ```
 
 The logger can then be used to log messages of different levels (each one corresponds to a different color in the

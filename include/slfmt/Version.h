@@ -1,7 +1,7 @@
 /*
  * slfmt - A simple logging library for C++
  *
- * version.h - Version information
+ * Version.h - Version information
  *
  * Copyright (c) 2023 Samuel Castrillo Domínguez
  * All rights reserved.
@@ -22,6 +22,7 @@ const long SLFMT_VERSION_PATCH = 0;
 
 const long SLFMT_VERSION = (SLFMT_VERSION_MAJOR * 10000 + SLFMT_VERSION_MINOR * 100 + SLFMT_VERSION_PATCH);
 
-const std::string SLFMT_VERSION_STRING = fmt::format("{}.{}.{}", SLFMT_VERSION_MAJOR, SLFMT_VERSION_MINOR, SLFMT_VERSION_PATCH);
+const std::string SLFMT_VERSION_STRING =
+        fmt::format("{}.{}.{}", SLFMT_VERSION_MAJOR, SLFMT_VERSION_MINOR, SLFMT_VERSION_PATCH);
 
 #endif // SLFMT_VERSION_H

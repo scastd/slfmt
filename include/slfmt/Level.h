@@ -1,7 +1,7 @@
 /*
  * slfmt - A simple logging library for C++
  *
- * level.h - Log levels for slfmt
+ * Level.h - Log levels for slfmt
  *
  * Copyright (c) 2023 Samuel Castrillo Domínguez
  * All rights reserved.
@@ -18,15 +18,7 @@ namespace slfmt {
     /**
      * @brief Log levels.
      */
-    enum class Level {
-        TRACE,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR,
-        FATAL,
-        UNKNOWN
-    };
+    enum class Level { TRACE, DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN };
 
     /**
      * @brief Converts a log level to a string.

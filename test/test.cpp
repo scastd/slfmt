@@ -7,7 +7,7 @@ TEST_CASE("test version") {
 
 class TestClass {
 public:
-    SLFMT_LOGGER(logger, TestClass);
+    SLFMT_CONSOLE_LOGGER(logger, TestClass);
 
     void Test() {
         logger->Info("Test");
