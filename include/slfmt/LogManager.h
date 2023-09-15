@@ -21,15 +21,8 @@ namespace slfmt {
         }
 
         static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz) {
-            return GetFileLogger(clazz, s_filename);
+            return GetFileLogger(clazz, "app.log");
         }
-
-        void SetFilename(const std::string_view &filename) {
-            s_filename = filename;
-        }
-
-    private:
-        static inline std::string s_filename = "app.log";
     };
 } // namespace slfmt
 
