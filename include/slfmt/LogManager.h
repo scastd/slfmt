@@ -5,8 +5,9 @@
 #include <slfmt/LoggerBase.h>
 
 #define SLFMT_CONSOLE_LOGGER(name, clazz) static inline const auto name = slfmt::LogManager::GetConsoleLogger(#clazz)
-#define SLFMT_FILE_LOGGER(name, clazz)                                                                                 \
-    static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz, "log_test.log")
+#define SLFMT_FILE_LOGGER(name, clazz) static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz)
+#define SLFMT_FILE_LOGGER_NAME(name, clazz, filename)                                                                  \
+    static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz, filename);
 
 namespace slfmt {
     class LogManager {
@@ -18,6 +19,17 @@ namespace slfmt {
         static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz, const std::string_view &file) {
             return std::make_unique<FileLogger>(clazz, file);
         }
+
+        static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz) {
+            return GetFileLogger(clazz, s_filename);
+        }
+
+        void SetFilename(const std::string_view &filename) {
+            s_filename = filename;
+        }
+
+    private:
+        static inline std::string s_filename = "app.log";
     };
 } // namespace slfmt
 
