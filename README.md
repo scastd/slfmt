@@ -27,11 +27,11 @@ add_subdirectory(slfmt)
 
 ### Basic usage
 
-There are two ways to use the logger. The first is to use the `SLFMT_LOGGER` macro inside the private fields of the
-class:
+There are two ways to use the logger. The first is to use the `SLFMT_CONSOLE_LOGGER` macro inside the private fields of
+the class:
 
 ```c++
-SLFMT_LOGGER(logger, Class);
+SLFMT_CONSOLE_LOGGER(logger, Class);
 ```
 
 The second is to use the `slfmt::Logger::GetConsoleLogger` method:
@@ -73,11 +73,11 @@ The default log format is:
 
 # License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
+This project is licensed under the MIT License: see the [LICENSE](LICENSE.txt) file for details.
 
 # Future work
 
-- [ ] Add support for logging to file.
+- [x] Add support for logging to file.
     - [ ] Rotating log files.
     - [ ] Log file size limit.
     - [ ] Log file path / name.
