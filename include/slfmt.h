@@ -25,9 +25,9 @@
 #ifndef SLFMT_H
 #define SLFMT_H
 
-#include "slfmt/color.h"
-#include "slfmt/level.h"
-#include "slfmt/logger.h"
-#include "slfmt/version.h"
+#include "slfmt/Color.h"
+#include "slfmt/Level.h"
+#include "slfmt/Logger.h"
+#include "slfmt/Version.h"
 
 #endif // SLFMT_H

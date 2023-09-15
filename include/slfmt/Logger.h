@@ -16,9 +16,9 @@
 #include <memory>
 #include <string>
 
-#include "color.h"
+#include "Color.h"
+#include "Level.h"
 #include "fmt/format.h"
-#include "level.h"
 
 #define SLFMT_LOGGER(name, clazz) static inline const auto name = slfmt::Logger::GetLogger(#clazz)
 
