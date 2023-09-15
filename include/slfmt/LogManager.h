@@ -9,6 +9,8 @@
 #define SLFMT_FILE_LOGGER_NAME(name, clazz, filename)                                                                  \
     static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz, filename);
 
+static constexpr std::string_view s_defaultLoggerFilename = "app.log";
+
 namespace slfmt {
     class LogManager {
     public:
@@ -21,7 +23,7 @@ namespace slfmt {
         }
 
         static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz) {
-            return GetFileLogger(clazz, "app.log");
+            return GetFileLogger(clazz, s_defaultLoggerFilename);
         }
     };
 } // namespace slfmt
