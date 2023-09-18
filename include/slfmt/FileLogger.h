@@ -39,27 +39,27 @@ namespace slfmt {
         }
 
         void Trace(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "TRACE", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "TRACE", GetClass(), msg);
         }
 
         void Debug(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "DEBUG", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "DEBUG", GetClass(), msg);
         }
 
         void Info(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "INFO", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "INFO", GetClass(), msg);
         }
 
         void Warn(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "WARN", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "WARN", GetClass(), msg);
         }
 
         void Error(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "ERROR", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "ERROR", GetClass(), msg);
         }
 
         void Fatal(std::string_view msg) const override {
-            fmt::print(m_file, SLFMT_LOG_FORMAT, "FATAL", GetClass(), msg);
+            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "FATAL", GetClass(), msg);
         }
     };
 } // namespace slfmt
