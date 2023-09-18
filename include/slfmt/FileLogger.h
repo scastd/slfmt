@@ -12,16 +12,12 @@
 #ifndef SLFMT_FILE_LOGGER_H
 #define SLFMT_FILE_LOGGER_H
 
+#include "fmt/os.h"
+#include <fmt/ostream.h>
 #include <slfmt/LoggerBase.h>
 
 namespace slfmt {
     class FileLogger : public LoggerBase {
-    private:
-        /**
-         * @brief The file to log to.
-         */
-        FILE *m_file;
-
     public:
         /**
          * @brief Constructs a new logger for the specified class.
@@ -29,37 +25,42 @@ namespace slfmt {
          * @param clazz The class to create a logger for.
          * @param file The file to log to.
          */
-        explicit FileLogger(const std::string_view &clazz, const std::string_view &file) : LoggerBase(clazz) {
-            m_file = fopen(file.data(), "a");
-        }
+        explicit FileLogger(const std::string_view &clazz, const std::string_view &file)
+            : LoggerBase(clazz), m_stream(fmt::output_file(file.data())) {}
 
         ~FileLogger() override {
-            fflush(m_file); // Flush the file buffer.
-            fclose(m_file);
+            m_stream.flush(); // Flush the stream before closing the file.
+            m_stream.close();
         }
 
-        void Trace(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "TRACE", GetClass(), msg);
+    private:
+        /**
+         * @brief The output stream for the file to log to.
+         */
+        fmt::ostream m_stream;
+
+        void Trace_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "TRACE", GetClass(), msg);
         }
 
-        void Debug(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "DEBUG", GetClass(), msg);
+        void Debug_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "DEBUG", GetClass(), msg);
         }
 
-        void Info(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "INFO", GetClass(), msg);
+        void Info_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "INFO", GetClass(), msg);
         }
 
-        void Warn(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "WARN", GetClass(), msg);
+        void Warn_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "WARN", GetClass(), msg);
         }
 
-        void Error(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "ERROR", GetClass(), msg);
+        void Error_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "ERROR", GetClass(), msg);
         }
 
-        void Fatal(std::string_view msg) const override {
-            fmt::print(m_file, fmt::runtime(SLFMT_LOG_FORMAT), "FATAL", GetClass(), msg);
+        void Fatal_Internal(std::string_view msg) override {
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "FATAL", GetClass(), msg);
         }
     };
 } // namespace slfmt

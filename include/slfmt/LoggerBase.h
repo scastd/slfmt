@@ -36,21 +36,63 @@ namespace slfmt {
          * @param level The level to log at.
          * @param msg The message to log.
          */
-        void Log_internal(const slfmt::Level &level, std::string_view msg) const {
+        void Log_Internal(const slfmt::Level &level, std::string_view msg) {
             if (level == slfmt::Level::TRACE) {
-                Trace(msg);
+                Trace_Internal(msg);
             } else if (level == slfmt::Level::DEBUG) {
-                Debug(msg);
+                Debug_Internal(msg);
             } else if (level == slfmt::Level::INFO) {
-                Info(msg);
+                Info_Internal(msg);
             } else if (level == slfmt::Level::WARN) {
-                Warn(msg);
+                Warn_Internal(msg);
             } else if (level == slfmt::Level::ERROR) {
-                Error(msg);
+                Error_Internal(msg);
             } else if (level == slfmt::Level::FATAL) {
-                Fatal(msg);
+                Fatal_Internal(msg);
             }
         }
+
+        /**
+         * @brief Logs a message at the TRACE level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Trace_Internal(std::string_view msg) = 0;
+
+        /**
+         * @brief Logs a message at the DEBUG level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Debug_Internal(std::string_view msg) = 0;
+
+        /**
+         * @brief Logs a message at the INFO level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Info_Internal(std::string_view msg) = 0;
+
+        /**
+         * @brief Logs a message at the WARN level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Warn_Internal(std::string_view msg) = 0;
+
+        /**
+         * @brief Logs a message at the ERROR level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Error_Internal(std::string_view msg) = 0;
+
+        /**
+         * @brief Logs a message at the FATAL level.
+         *
+         * @param msg The message to log.
+         */
+        virtual void Fatal_Internal(std::string_view msg) = 0;
 
     protected:
         /**
@@ -86,16 +128,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Log(const slfmt::Level &level, std::string_view msg, Args &&...args) const {
-            Log_internal(level, (std::string) fmt::vformat(msg, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Log(const slfmt::Level &level, std::string_view msg, Args &&...args) {
+            Log_Internal(level, (std::string) fmt::vformat(msg, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the TRACE level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Trace(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the TRACE level.
@@ -105,16 +140,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Trace(std::string_view format, Args &&...args) const {
-            Trace((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Trace(std::string_view format, Args &&...args) {
+            Trace_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the DEBUG level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Debug(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the DEBUG level.
@@ -124,16 +152,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Debug(std::string_view format, Args &&...args) const {
-            Debug((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Debug(std::string_view format, Args &&...args) {
+            Debug_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the INFO level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Info(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the INFO level.
@@ -143,16 +164,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Info(std::string_view format, Args &&...args) const {
-            Info((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Info(std::string_view format, Args &&...args) {
+            Info_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the WARN level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Warn(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the WARN level.
@@ -162,16 +176,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Warn(std::string_view format, Args &&...args) const {
-            Warn((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Warn(std::string_view format, Args &&...args) {
+            Warn_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the ERROR level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Error(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the ERROR level.
@@ -181,16 +188,9 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Error(std::string_view format, Args &&...args) const {
-            Error((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Error(std::string_view format, Args &&...args) {
+            Error_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
-
-        /**
-         * @brief Logs a message at the FATAL level.
-         *
-         * @param msg The message to log.
-         */
-        virtual void Fatal(std::string_view msg) const = 0;
 
         /**
          * @brief Logs a message at the FATAL level.
@@ -200,8 +200,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Fatal(std::string_view format, Args &&...args) const {
-            Fatal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Fatal(std::string_view format, Args &&...args) {
+            Fatal_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
         }
     };
 } // namespace slfmt
