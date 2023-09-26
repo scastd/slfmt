@@ -20,7 +20,13 @@
 #include "fmt/format.h"
 #include "Level.h"
 
-static const inline std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
+static const std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
+static const char *const TRACE_LEVEL_STRING = "TRACE";
+static const char *const DEBUG_LEVEL_STRING = "DEBUG";
+static const char *const INFO_LEVEL_STRING = "INFO";
+static const char *const WARN_LEVEL_STRING = "WARN";
+static const char *const ERROR_LEVEL_STRING = "ERROR";
+static const char *const FATAL_LEVEL_STRING = "FATAL";
 
 namespace slfmt {
     class LoggerBase {

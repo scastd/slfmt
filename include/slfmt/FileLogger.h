@@ -40,27 +40,33 @@ namespace slfmt {
         fmt::ostream m_stream;
 
         void Trace_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "TRACE", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), TRACE_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
 
         void Debug_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "DEBUG", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), DEBUG_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
 
         void Info_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "INFO", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), INFO_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
 
         void Warn_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "WARN", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), WARN_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
 
         void Error_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "ERROR", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), ERROR_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), "FATAL", GetClass(), msg);
+            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), FATAL_LEVEL_STRING, GetClass(), msg);
+            m_stream.flush();
         }
     };
 } // namespace slfmt
