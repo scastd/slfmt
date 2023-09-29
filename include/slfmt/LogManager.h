@@ -14,6 +14,9 @@ static constexpr std::string_view s_defaultLoggerFilename = "app.log";
 namespace slfmt {
     class LogManager {
     public:
+        LogManager() = delete;
+        ~LogManager() = delete;
+
         static std::unique_ptr<LoggerBase> GetConsoleLogger(const std::string_view &clazz) {
             return std::make_unique<ConsoleLogger>(clazz);
         }
