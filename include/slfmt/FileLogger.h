@@ -12,8 +12,7 @@
 #ifndef SLFMT_FILE_LOGGER_H
 #define SLFMT_FILE_LOGGER_H
 
-#include "fmt/os.h"
-#include <fmt/ostream.h>
+#include <fstream>
 #include <slfmt/LoggerBase.h>
 
 namespace slfmt {
@@ -26,7 +25,7 @@ namespace slfmt {
          * @param file The file to log to.
          */
         explicit FileLogger(const std::string_view &clazz, const std::string_view &file)
-            : LoggerBase(clazz), m_stream(fmt::output_file(file.data())) {}
+            : LoggerBase(clazz), m_stream(file.data(), std::ios::out | std::ios::app) {}
 
         ~FileLogger() override {
             m_stream.flush(); // Flush the stream before closing the file.
@@ -36,36 +35,43 @@ namespace slfmt {
     private:
         /**
          * @brief The output stream for the file to log to.
+         *
+         * @note the mode <b>std::ios::app <i>(seeks to end before each write)</i></b> allows having
+         * multiple instances of loggers, writing to the same file WITHOUT overwriting each other.
          */
-        fmt::ostream m_stream;
+        std::ofstream m_stream;
 
         void Trace_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), TRACE_LEVEL_STRING, GetClass(), msg);
-            m_stream.flush();
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), TRACE_LEVEL_STRING, GetClass(), msg));
         }
 
         void Debug_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), DEBUG_LEVEL_STRING, GetClass(), msg);
-            m_stream.flush();
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), DEBUG_LEVEL_STRING, GetClass(), msg));
         }
 
         void Info_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), INFO_LEVEL_STRING, GetClass(), msg);
-            m_stream.flush();
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), INFO_LEVEL_STRING, GetClass(), msg));
         }
 
         void Warn_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), WARN_LEVEL_STRING, GetClass(), msg);
-            m_stream.flush();
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), WARN_LEVEL_STRING, GetClass(), msg));
         }
 
         void Error_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), ERROR_LEVEL_STRING, GetClass(), msg);
-            m_stream.flush();
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), ERROR_LEVEL_STRING, GetClass(), msg));
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            m_stream.print(fmt::runtime(SLFMT_LOG_FORMAT), FATAL_LEVEL_STRING, GetClass(), msg);
+            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), FATAL_LEVEL_STRING, GetClass(), msg));
+        }
+
+        /**
+         * @brief Writes the specified message to the file and flushes the stream.
+         *
+         * @param msg The message to write.
+         */
+        void WriteAndFlushStream(std::string_view msg) {
+            m_stream.write(msg.data(), (std::streamsize) msg.size());
             m_stream.flush();
         }
     };
