@@ -17,7 +17,6 @@
 #include <string>
 
 #include "Color.h"
-#include "fmt/format.h"
 #include "Level.h"
 
 static const std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
