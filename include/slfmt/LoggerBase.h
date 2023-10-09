@@ -129,10 +129,12 @@ namespace slfmt {
 
         static std::string GetTimestampString() {
             auto now = std::chrono::system_clock::now();
-            std::time_t now_time = std::chrono::system_clock::to_time_t(now);
-            const std::tm *now_tm = std::localtime(&now_time);
+            auto nowTime = std::chrono::system_clock::to_time_t(now);
+            auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
             std::stringstream ss;
-            ss << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S");
+            ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d %H:%M:%S") << ',' << std::setfill('0')
+               << std::setw(3) << nowMs.count();
             return ss.str();
         }
 
