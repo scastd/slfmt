@@ -14,6 +14,13 @@
 
 #include <string>
 
+static const char *const TRACE_LEVEL_STRING = "TRACE";
+static const char *const DEBUG_LEVEL_STRING = "DEBUG";
+static const char *const INFO_LEVEL_STRING = "INFO";
+static const char *const WARN_LEVEL_STRING = "WARN";
+static const char *const ERROR_LEVEL_STRING = "ERROR";
+static const char *const FATAL_LEVEL_STRING = "FATAL";
+
 namespace slfmt {
     /**
      * @brief Log levels.

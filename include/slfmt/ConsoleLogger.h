@@ -21,27 +21,27 @@ namespace slfmt {
 
     private:
         void Trace_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::TRACE_COLOR, SLFMT_LOG_FORMAT, "TRACE", GetClass(), msg);
+            fmt::print(slfmt::color::TRACE_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING));
         }
 
         void Debug_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::DEBUG_COLOR, SLFMT_LOG_FORMAT, "DEBUG", GetClass(), msg);
+            fmt::print(slfmt::color::DEBUG_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING));
         }
 
         void Info_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::INFO_COLOR, SLFMT_LOG_FORMAT, "INFO", GetClass(), msg);
+            fmt::print(slfmt::color::INFO_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING));
         }
 
         void Warn_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::WARN_COLOR, SLFMT_LOG_FORMAT, "WARN", GetClass(), msg);
+            fmt::print(slfmt::color::WARN_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING));
         }
 
         void Error_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::ERROR_COLOR, SLFMT_LOG_FORMAT, "ERROR", GetClass(), msg);
+            fmt::print(slfmt::color::ERROR_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING));
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::FATAL_COLOR, SLFMT_LOG_FORMAT, "FATAL", GetClass(), msg);
+            fmt::print(slfmt::color::FATAL_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING));
         }
     };
 } // namespace slfmt

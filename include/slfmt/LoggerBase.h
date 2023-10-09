@@ -12,20 +12,31 @@
 #ifndef SLFMT_LOGGER_BASE_H
 #define SLFMT_LOGGER_BASE_H
 
+#include <chrono>
 #include <fmt/format.h>
+#include <iomanip>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "Color.h"
 #include "Level.h"
 
-static const std::string SLFMT_LOG_FORMAT = "[{} ({})] {}\n";
-static const char *const TRACE_LEVEL_STRING = "TRACE";
-static const char *const DEBUG_LEVEL_STRING = "DEBUG";
-static const char *const INFO_LEVEL_STRING = "INFO";
-static const char *const WARN_LEVEL_STRING = "WARN";
-static const char *const ERROR_LEVEL_STRING = "ERROR";
-static const char *const FATAL_LEVEL_STRING = "FATAL";
+#define LOG_PARAMS_FOR_LEVEL(level) GetTimestampString(), level, GetClass(), GetThreadIdString(), msg
+
+/**
+ * @brief The default log format.
+ *
+ * @details The default log format is as follows:
+ * <ul>
+ *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS`.</li>
+ *  <li>Level: the level of the log.</li>
+ *  <li>Class: the class that logged the message.</li>
+ *  <li>Thread: the thread id.</li>
+ *  <li>Message: the message to log.</li>
+ * </ul>
+ */
+static const std::string SLFMT_LOG_FORMAT = "{} {} ({}) [Thread-{}] {}\n";
 
 namespace slfmt {
     class LoggerBase {
@@ -114,6 +125,21 @@ namespace slfmt {
          */
         FMT_NODISCARD std::string_view GetClass() const {
             return m_class;
+        }
+
+        static std::string GetTimestampString() {
+            auto now = std::chrono::system_clock::now();
+            std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+            const std::tm *now_tm = std::localtime(&now_time);
+            std::stringstream ss;
+            ss << std::put_time(now_tm, "%Y-%m-%d %H:%M:%S");
+            return ss.str();
+        }
+
+        static std::string GetThreadIdString() {
+            std::stringstream ss;
+            ss << std::this_thread::get_id();
+            return ss.str();
         }
 
     public:
