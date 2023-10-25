@@ -24,7 +24,7 @@ namespace slfmt {
          * @param clazz The class to create a logger for.
          * @param file The file to log to.
          */
-        explicit FileLogger(const std::string_view &clazz, const std::string_view &file)
+        FileLogger(const std::string_view &clazz, const std::string_view &file)
             : LoggerBase(clazz), m_stream(file.data(), std::ios::out | std::ios::app) {}
 
         ~FileLogger() override {
