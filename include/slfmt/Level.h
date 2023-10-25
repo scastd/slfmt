@@ -20,6 +20,7 @@ static const char *const INFO_LEVEL_STRING = "INFO";
 static const char *const WARN_LEVEL_STRING = "WARN";
 static const char *const ERROR_LEVEL_STRING = "ERROR";
 static const char *const FATAL_LEVEL_STRING = "FATAL";
+static const char *const UNKNOWN_LEVEL_STRING = "UNKNOWN";
 
 namespace slfmt {
     /**
@@ -35,19 +36,19 @@ namespace slfmt {
      */
     static inline std::string LevelToString(const Level &level) {
         if (level == Level::TRACE) {
-            return "TRACE";
+            return TRACE_LEVEL_STRING;
         } else if (level == Level::DEBUG) {
-            return "DEBUG";
+            return DEBUG_LEVEL_STRING;
         } else if (level == Level::INFO) {
-            return "INFO";
+            return INFO_LEVEL_STRING;
         } else if (level == Level::WARN) {
-            return "WARN";
+            return WARN_LEVEL_STRING;
         } else if (level == Level::ERROR) {
-            return "ERROR";
+            return ERROR_LEVEL_STRING;
         } else if (level == Level::FATAL) {
-            return "FATAL";
+            return FATAL_LEVEL_STRING;
         } else {
-            return "UNKNOWN";
+            return UNKNOWN_LEVEL_STRING;
         }
     }
 
@@ -58,17 +59,17 @@ namespace slfmt {
      * @return The log level.
      */
     static inline Level StringToLevel(const std::string_view &level) {
-        if (level == "TRACE") {
+        if (level == TRACE_LEVEL_STRING) {
             return Level::TRACE;
-        } else if (level == "DEBUG") {
+        } else if (level == DEBUG_LEVEL_STRING) {
             return Level::DEBUG;
-        } else if (level == "INFO") {
+        } else if (level == INFO_LEVEL_STRING) {
             return Level::INFO;
-        } else if (level == "WARN") {
+        } else if (level == WARN_LEVEL_STRING) {
             return Level::WARN;
-        } else if (level == "ERROR") {
+        } else if (level == ERROR_LEVEL_STRING) {
             return Level::ERROR;
-        } else if (level == "FATAL") {
+        } else if (level == FATAL_LEVEL_STRING) {
             return Level::FATAL;
         } else {
             return Level::UNKNOWN;

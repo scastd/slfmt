@@ -28,13 +28,13 @@
  * @brief The default log format.
  *
  * @details The default log format is as follows:
- * <ul>
+ * <ol>
  *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS`.</li>
  *  <li>Level: the level of the log.</li>
  *  <li>Class: the class that logged the message.</li>
  *  <li>Thread: the thread id.</li>
  *  <li>Message: the message to log.</li>
- * </ul>
+ * </ol>
  */
 static const std::string SLFMT_LOG_FORMAT = "{} {} ({}) [Thread-{}] {}\n";
 
