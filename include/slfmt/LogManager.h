@@ -8,6 +8,13 @@
 #define SLFMT_FILE_LOGGER(name, clazz) static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz)
 #define SLFMT_FILE_LOGGER_NAME(name, clazz, filename)                                                                  \
     static inline const auto name = slfmt::LogManager::GetFileLogger(#clazz, filename);
+#define SLFMT_ALL_LOGGER(name, clazz)                                                                                  \
+    SLFMT_CONSOLE_LOGGER(name##_console, clazz);                                                                       \
+    SLFMT_FILE_LOGGER(name##_file, clazz)
+#define SLFMT_ALL_LOGGER_NAME(name, clazz, filename)                                                                   \
+    SLFMT_CONSOLE_LOGGER(name##_console, clazz);                                                                       \
+    SLFMT_FILE_LOGGER_NAME(name##_file, clazz, filename)
+#define SLFMT_ALL_LOGGER_DEFAULT(name, clazz) SLFMT_ALL_LOGGER_NAME(name, clazz, slfmt::s_defaultLoggerFilename)
 
 static constexpr std::string_view s_defaultLoggerFilename = "app.log";
 
