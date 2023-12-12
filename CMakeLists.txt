@@ -76,3 +76,10 @@ target_include_directories(
         PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         PUBLIC $<INSTALL_INTERFACE:include>
 )
+
+option(SLFMT_BUILD_EXAMPLES "Build the examples" OFF)
+
+if (SLFMT_BUILD_EXAMPLES)
+    message("Adding slfmt examples")
+    add_subdirectory(examples)
+endif ()
