@@ -57,7 +57,6 @@ if (SLFMT_BUILD_TESTS)
 endif ()
 
 set(SLFMT_SOURCES
-        slfmt.cpp
         include/slfmt.h
         include/slfmt/Color.h
         include/slfmt/ConsoleLogger.h
@@ -69,6 +68,9 @@ set(SLFMT_SOURCES
 )
 
 add_library(slfmt STATIC ${SLFMT_SOURCES})
+set_target_properties(slfmt PROPERTIES LINKER_LANGUAGE CXX)
+
+target_link_libraries(slfmt fmt::fmt)
 target_include_directories(
         slfmt
         PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
