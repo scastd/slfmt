@@ -56,5 +56,21 @@ if (SLFMT_BUILD_TESTS)
     add_subdirectory(bench)
 endif ()
 
-# Add the include directory to the project (contains declaration for the library)
-add_subdirectory(include)
+set(SLFMT_SOURCES
+        slfmt.cpp
+        include/slfmt.h
+        include/slfmt/Color.h
+        include/slfmt/ConsoleLogger.h
+        include/slfmt/FileLogger.h
+        include/slfmt/Level.h
+        include/slfmt/LoggerBase.h
+        include/slfmt/LogManager.h
+        include/slfmt/Version.h
+)
+
+add_library(slfmt STATIC ${SLFMT_SOURCES})
+target_include_directories(
+        slfmt
+        PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PUBLIC $<INSTALL_INTERFACE:include>
+)
