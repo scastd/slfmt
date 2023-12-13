@@ -3,7 +3,7 @@
 
 class TestClass {
 private:
-    SLFMT_CONSOLE_LOGGER(s_logger, TestClass);
+    SLFMT_CONSOLE_LOGGER_FIELD(s_logger, TestClass);
 
 public:
     void Test(std::string_view s) const {
@@ -18,7 +18,7 @@ public:
 
 class TestClass2 {
 private:
-    SLFMT_FILE_LOGGER(s_logger, TestClass2);
+    SLFMT_FILE_LOGGER_FIELD(s_logger, TestClass2);
 
 public:
     void Test(std::string_view s) const {
