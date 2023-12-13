@@ -14,7 +14,10 @@
 #define SLFMT_FILE_LOGGER_NAME_FIELD(name, clazz, filename)                                                            \
     static inline const auto name = SLFMT_FILE_LOGGER_NAME(clazz, filename)
 #define SLFMT_COMBINED_LOGGER_FIELD(name, clazz, ...)                                                                  \
-    static inline const auto name = slfmt::LogManager::GetCombinedLogger(#clazz, { __VA_ARGS__ })
+    static inline const auto name = slfmt::LogManager::GetCombinedLogger(#clazz, __VA_ARGS__)
+
+#define SLFMT_FILE_CONSOLE_COMBINED_LOGGER_FIELDS(name, clazz)                                                         \
+    SLFMT_COMBINED_LOGGER_FIELD(name, clazz, SLFMT_FILE_LOGGER(clazz), SLFMT_CONSOLE_LOGGER(clazz))
 
 static constexpr std::string_view s_defaultLoggerFilename = "app.log";
 
@@ -33,9 +36,15 @@ namespace slfmt {
             return std::make_unique<FileLogger>(clazz, file);
         }
 
-        static std::unique_ptr<LoggerBase> GetCombinedLogger(const std::string_view &clazz,
-                                                             std::vector<std::unique_ptr<LoggerBase>> loggers) {
-            return std::make_unique<CombinedLogger>(clazz, std::move(loggers));
+        template<typename... Loggers>
+        static std::unique_ptr<LoggerBase> GetCombinedLogger(const std::string_view &clazz, Loggers &&...loggers) {
+            std::vector<std::unique_ptr<LoggerBase>> combinedLoggers;
+
+            // Some magic to convert the variadic arguments to a vector of unique_ptr<LoggerBase>
+            combinedLoggers.reserve(sizeof...(loggers));
+            (combinedLoggers.push_back(std::forward<Loggers>(loggers)), ...);
+
+            return std::make_unique<CombinedLogger>(clazz, std::move(combinedLoggers));
         }
     };
 } // namespace slfmt
