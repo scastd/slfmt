@@ -77,8 +77,7 @@ namespace slfmt {
          * @param msg The message to write.
          */
         void WriteAndFlushStream(std::string_view msg) {
-            m_stream.write(msg.data(), (std::streamsize) msg.size());
-            m_stream.flush();
+            m_stream.write(msg.data(), (std::streamsize) msg.size()).flush();
         }
     };
 } // namespace slfmt
