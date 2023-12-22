@@ -16,10 +16,13 @@
 #include <slfmt/LoggerBase.h>
 
 namespace slfmt {
+    /**
+     * @brief File logger for slfmt.
+     */
     class FileLogger : public LoggerBase {
     public:
         /**
-         * @brief Constructs a new logger for the specified class.
+         * @brief Constructs a new logger for the specified class and file.
          *
          * @param clazz The class to create a logger for.
          * @param file The file to log to.
@@ -37,7 +40,7 @@ namespace slfmt {
          * @brief The output stream for the file to log to.
          *
          * @note the mode <b>std::ios::app <i>(seeks to end before each write)</i></b> allows having
-         * multiple instances of loggers, writing to the same file WITHOUT overwriting each other.
+         * multiple instances of loggers, writing to the same file <b>without</b> overwriting each other.
          */
         std::ofstream m_stream;
 
@@ -67,6 +70,9 @@ namespace slfmt {
 
         /**
          * @brief Writes the specified message to the file and flushes the stream.
+         *
+         * @note When flushing the stream, the message is written to the file immediately. So, if the program
+         * crashes, the message will be written to the file before the crash.
          *
          * @param msg The message to write.
          */

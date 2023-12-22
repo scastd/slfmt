@@ -15,8 +15,16 @@
 #include <slfmt/LoggerBase.h>
 
 namespace slfmt {
+    /**
+     * @brief Console logger for slfmt.
+     */
     class ConsoleLogger : public LoggerBase {
     public:
+        /**
+         * @brief Construct a new ConsoleLogger object.
+         *
+         * @param clazz Class name.
+         */
         explicit ConsoleLogger(const std::string_view &clazz) : LoggerBase(clazz) {}
 
     private:

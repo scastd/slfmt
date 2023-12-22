@@ -1,3 +1,14 @@
+/*
+ * slfmt - A simple logging library for C++
+ *
+ * CombinedLogger.h - Combined logger for slfmt (logs to multiple loggers at once).
+ *
+ * Copyright (c) 2023 Samuel Castrillo Domínguez
+ * All rights reserved.
+ *
+ * For more information, please see the LICENSE file.
+ */
+
 #ifndef SLFMT_COMBINED_LOGGER_H
 #define SLFMT_COMBINED_LOGGER_H
 
@@ -5,8 +16,17 @@
 #include <vector>
 
 namespace slfmt {
+    /**
+     * @brief Combined logger for slfmt (logs to multiple loggers at once).
+     */
     class CombinedLogger : public LoggerBase {
     public:
+        /**
+         * @brief Construct a new Combined Logger object with the given loggers.
+         *
+         * @param clazz Class name.
+         * @param loggers Loggers to log to.
+         */
         CombinedLogger(const std::string_view &clazz, std::vector<std::unique_ptr<LoggerBase>> loggers)
             : LoggerBase(clazz), m_loggers(std::move(loggers)) {}
 
