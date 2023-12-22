@@ -27,6 +27,10 @@ namespace slfmt {
         LogManager() = delete;
         ~LogManager() = delete;
 
+        static std::unique_ptr<LoggerBase> GetLogger(const std::string_view &clazz) {
+            return GetConsoleLogger(clazz);
+        }
+
         static std::unique_ptr<LoggerBase> GetConsoleLogger(const std::string_view &clazz) {
             return std::make_unique<ConsoleLogger>(clazz);
         }
