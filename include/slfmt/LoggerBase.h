@@ -132,10 +132,16 @@ namespace slfmt {
             auto now = std::chrono::system_clock::now();
             auto nowTime = std::chrono::system_clock::to_time_t(now);
             auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+            struct tm tm = {};
+
+#ifdef _WIN32
+            localtime_s(&tm, &nowTime);
+#else
+            localtime_r(&nowTime, &tm);
+#endif
 
             std::stringstream ss;
-            ss << std::put_time(std::localtime(&nowTime), "%Y-%m-%d %H:%M:%S") << ',' << std::setfill('0')
-               << std::setw(3) << nowMs.count();
+            ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << ',' << std::setfill('0') << std::setw(3) << nowMs.count();
             return ss.str();
         }
 
