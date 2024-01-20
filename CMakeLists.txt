@@ -49,7 +49,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 add_subdirectory(external/fmt)
 
 # Add the testing subdirectories
-option(SLFMT_BUILD_TESTS "Build the tests" ON)
+option(SLFMT_BUILD_TESTS "Build the tests" OFF)
 
 if (SLFMT_BUILD_TESTS)
     add_subdirectory(test)
