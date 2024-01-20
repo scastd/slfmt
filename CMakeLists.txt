@@ -78,7 +78,7 @@ target_include_directories(
         PUBLIC $<INSTALL_INTERFACE:include>
 )
 
-option(SLFMT_BUILD_EXAMPLES "Build the examples" OFF)
+option(SLFMT_BUILD_EXAMPLES "Build the examples" ON)
 
 if (SLFMT_BUILD_EXAMPLES)
     message("Adding slfmt examples")
