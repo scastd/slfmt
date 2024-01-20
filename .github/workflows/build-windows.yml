@@ -25,6 +25,6 @@ jobs:
 
       - name: Configure, Build, and Package
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
           cmake --build build --config Release
           rmdir /s /q build
