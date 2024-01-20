@@ -1,0 +1,25 @@
+name: MacOS build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install CMake and dependencies
+        run: |
+          brew install cmake openal-soft gcc@10 dwarf dwarfutils binutils
+          brew link --overwrite gcc@10
+
+      - name: Configure, Build, and Package
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+          rm -rf build

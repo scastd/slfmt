@@ -1,0 +1,30 @@
+name: Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install CMake and dependencies
+        run: |
+          choco install cmake openal --confirm
+        shell: powershell
+
+      - name: Install MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: 16.0
+
+      - name: Configure, Build, and Package
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
+          cmake --build build --config Release
+          rmdir /s /q build
