@@ -27,4 +27,4 @@ jobs:
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles"
           cmake --build build --config Release
-          rmdir /s /q build
+          Remove-Item -Recurse -Force build
