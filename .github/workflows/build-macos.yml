@@ -3,7 +3,7 @@ name: MacOS build
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, actions-setup ]
 
 jobs:
   build:
