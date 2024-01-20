@@ -15,7 +15,7 @@ jobs:
 
       - name: Install CMake and dependencies
         run: |
-          brew install cmake openal-soft gcc@10 dwarf dwarfutils binutils
+          brew install cmake openal-soft gcc@10 dwarf dwarfutils binutils archiver
           brew link --overwrite gcc@10
 
       - name: Configure, Build, and Package
