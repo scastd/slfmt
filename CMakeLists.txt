@@ -68,7 +68,7 @@ set(SLFMT_SOURCES
         include/slfmt/CombinedLogger.h
 )
 
-add_library(slfmt STATIC ${SLFMT_SOURCES})
+add_library(slfmt STATIC src/slfmt.cpp ${SLFMT_SOURCES})
 set_target_properties(slfmt PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(slfmt fmt::fmt)
@@ -78,7 +78,7 @@ target_include_directories(
         PUBLIC $<INSTALL_INTERFACE:include>
 )
 
-option(SLFMT_BUILD_EXAMPLES "Build the examples" ON)
+option(SLFMT_BUILD_EXAMPLES "Build the examples" OFF)
 
 if (SLFMT_BUILD_EXAMPLES)
     message("Adding slfmt examples")
