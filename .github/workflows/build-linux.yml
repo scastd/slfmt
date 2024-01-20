@@ -3,7 +3,7 @@ name: Linux build
 on:
   workflow_dispatch:
   push:
-    branches: [ main, actions-setup ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -16,9 +16,7 @@ jobs:
       - name: Install CMake and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-10 gcc-10 cpp-10 libasound2-dev mesa-common-dev libx11-dev \
-            libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev libopenal-dev \
-            libdwarf-dev libdw-dev binutils-dev
+          sudo apt-get install -y g++-10 gcc-10 cpp-10 cmake
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 \
             --slave /usr/bin/g++ g++ /usr/bin/g++-10 \
             --slave /usr/bin/gcov gcov /usr/bin/gcov-10

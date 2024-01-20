@@ -3,7 +3,7 @@ name: Windows release
 on:
   workflow_dispatch:
   push:
-    branches: [ main, actions-setup ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Install CMake and dependencies
         run: |
-          choco install cmake openal --confirm
+          choco install cmake --confirm
         shell: powershell
 
       - name: Install MSVC

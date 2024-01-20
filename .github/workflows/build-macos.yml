@@ -3,7 +3,7 @@ name: MacOS build
 on:
   workflow_dispatch:
   push:
-    branches: [ main, actions-setup ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Install CMake and dependencies
         run: |
-          brew install cmake openal-soft gcc@10 dwarf dwarfutils binutils archiver
+          brew install cmake gcc@10
           brew link --overwrite gcc@10
 
       - name: Configure, Build, and Package
