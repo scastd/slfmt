@@ -3,7 +3,7 @@ name: Linux build
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, actions-setup ]
 
 jobs:
   build:
@@ -27,6 +27,6 @@ jobs:
 
       - name: Configure, Build, and Package
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON
           cmake --build build --config Release -j "$(nproc)"
           rm -rf build
