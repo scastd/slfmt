@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
-
 # Configure optimization
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     if (MSVC)
@@ -34,12 +32,15 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(DESIRED_WARNINGS "${DESIRED_WARNINGS} -Wmost")
 endif ()
 
+option(WERROR "Add -Werror flag to build (turns warnings into errors)" OFF)
+
 if (WERROR)
     if (MSVC)
-        set(ERROR_FLAG "/WX-")
+        set(ERROR_FLAG "/WX")
     else ()
-        set(ERROR_FLAG "-Wno-error")
+        set(ERROR_FLAG "-Werror")
     endif ()
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ERROR_FLAG}")
 endif ()
 
