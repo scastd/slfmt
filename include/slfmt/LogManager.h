@@ -1,3 +1,14 @@
+/*
+* slfmt - A simple logging library for C++
+*
+* LogManager.h - Log manager for slfmt
+*
+* Copyright (c) 2023 Samuel Castrillo Domínguez
+* All rights reserved.
+*
+* For more information, please see the LICENSE file.
+*/
+
 #ifndef SLFMT_LOG_MANAGER_H
 #define SLFMT_LOG_MANAGER_H
 
