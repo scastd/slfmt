@@ -19,9 +19,12 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <filesystem>
 
 #include "Color.h"
 #include "Level.h"
+
+namespace fs = std::filesystem;
 
 #define LOG_PARAMS_FOR_LEVEL(level) GetTimestampString(), level, GetClass(), GetThreadIdString(), msg
 

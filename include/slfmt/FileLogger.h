@@ -14,7 +14,6 @@
 
 #include <fstream>
 #include <slfmt/LoggerBase.h>
-#include <filesystem>
 
 namespace slfmt {
     /**
@@ -138,18 +137,18 @@ namespace slfmt {
          * @param dstFile The destination file to move to.
          */
         static void MoveFile(const std::string_view &srcFile, const std::string_view &dstFile) {
-            std::filesystem::path srcPath(srcFile.data());
-            std::filesystem::path dstPath(dstFile.data());
+            fs::path srcPath(srcFile.data());
+            fs::path dstPath(dstFile.data());
 
-            if (!std::filesystem::exists(srcPath)) {
+            if (!fs::exists(srcPath)) {
                 throw std::runtime_error("Source file does not exist.");
             }
 
-            if (std::filesystem::exists(dstPath)) {
-                std::filesystem::remove(dstPath);
+            if (fs::exists(dstPath)) {
+                fs::remove(dstPath);
             }
 
-            std::filesystem::rename(srcPath, dstPath);
+            fs::rename(srcPath, dstPath);
         }
 
         /**
