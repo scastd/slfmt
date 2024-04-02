@@ -47,7 +47,9 @@ endif ()
 # Include all the source headers of the library
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
+# Add the external dependencies
 add_subdirectory(external/fmt)
+add_subdirectory(external/miniz)
 
 # Add the testing subdirectories
 option(SLFMT_BUILD_TESTS "Build the tests" OFF)
@@ -72,7 +74,7 @@ set(SLFMT_SOURCES
 add_library(slfmt STATIC src/slfmt.cpp ${SLFMT_SOURCES})
 set_target_properties(slfmt PROPERTIES LINKER_LANGUAGE CXX)
 
-target_link_libraries(slfmt fmt::fmt)
+target_link_libraries(slfmt fmt::fmt miniz)
 target_include_directories(
         slfmt
         PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
