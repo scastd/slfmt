@@ -19,12 +19,10 @@
 #include <sstream>
 #include <string>
 #include <thread>
-#include <filesystem>
 
 #include "Color.h"
+#include "Files.h"
 #include "Level.h"
-
-namespace fs = std::filesystem;
 
 #define LOG_PARAMS_FOR_LEVEL(level) GetTimestampString(), level, GetClass(), GetThreadIdString(), msg
 
@@ -156,8 +154,11 @@ namespace slfmt {
 
     public:
         LoggerBase(const LoggerBase &) = delete;
+
         LoggerBase(LoggerBase &&) = delete;
+
         LoggerBase &operator=(const LoggerBase &) = delete;
+
         LoggerBase &operator=(LoggerBase &&) = delete;
 
         virtual ~LoggerBase() = default;

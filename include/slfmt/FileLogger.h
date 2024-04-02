@@ -14,8 +14,6 @@
 
 #include <fstream>
 #include <slfmt/LoggerBase.h>
-#include <miniz.h>
-#include <iostream>
 
 namespace slfmt {
     /**
@@ -44,6 +42,10 @@ namespace slfmt {
                      MIN_FILE_SIZE / 1024 / 1024);
 
                 fileSizeLimit = MIN_FILE_SIZE;
+            }
+
+            if (!fs::exists(s_backupDir)) {
+                fs::create_directory(s_backupDir);
             }
         }
 
@@ -75,6 +77,11 @@ namespace slfmt {
          * @brief The current size of the log file.
          */
         std::streamsize m_currentFileSize = 0;
+
+        /**
+         * @brief The directory to store the backup log files.
+         */
+        static const inline fs::path s_backupDir = fs::path("logs");
 
         void Trace_Internal(std::string_view msg) override {
             WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
@@ -119,9 +126,10 @@ namespace slfmt {
                 m_stream.close();
 
                 // Backup the current log file.
-                const auto &backupFile = BackupFileName(m_file);
-                MoveFile(m_file, backupFile);
-                CompressBackup(backupFile);
+                const auto &backupFilename = BackupFileName(m_file);
+                const auto compressedFile = Files::CompressFile(m_file.data(), backupFilename);
+                Files::MoveFileToDir(compressedFile, s_backupDir);
+                Files::ClearFile(m_file);
 
                 // Open the new log file.
                 m_stream.open(m_file.data(), std::ios::out | std::ios::app);
@@ -135,59 +143,21 @@ namespace slfmt {
         }
 
         /**
-         * @brief Moves the specified source file to the specified destination file.
-         *
-         * @param srcFile The source file to move.
-         * @param dstFile The destination file to move to.
-         */
-        static void MoveFile(const std::string_view &srcFile, const std::string_view &dstFile) {
-            fs::path srcPath(srcFile.data());
-            fs::path dstPath(dstFile.data());
-
-            if (!fs::exists(srcPath)) {
-                throw std::runtime_error("Source file does not exist.");
-            }
-
-            if (fs::exists(dstPath)) {
-                fs::remove(dstPath);
-            }
-
-            fs::rename(srcPath, dstPath);
-        }
-
-        static void CompressBackup(const std::string_view &backupFile) {
-            const auto &filename = backupFile.data();
-            const auto &zipFilename = fmt::format("{}.zip", fs::path(filename).stem().c_str());
-            mz_zip_archive zip{};
-
-            memset(&zip, 0, sizeof(zip));
-            mz_zip_writer_init_file(&zip, zipFilename.c_str(), 0);
-
-            mz_zip_writer_add_file(&zip, filename, filename, "", 0, MZ_BEST_COMPRESSION);
-
-            mz_zip_writer_finalize_archive(&zip);
-            mz_zip_writer_end(&zip);
-
-            std::cout << "Compressed backup file: " << zipFilename << std::endl;
-
-            fs::remove(filename);
-        }
-
-        /**
          * @brief Generates a backup file name for the specified file.
          *
          * @param file The file to generate a backup file name for.
          *
          * @return The backup file name.
          */
-        static std::string BackupFileName(const std::string_view &file) {
+        static std::string BackupFileName(const fs::path &file) {
             auto now = std::chrono::system_clock::now();
             auto time = std::chrono::system_clock::to_time_t(now);
             struct tm tm{};
             localtime_r(&time, &tm);
 
-            return fmt::format("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}.log",
-                               file, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+            return fmt::format("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}",
+                               file.stem().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min,
+                               tm.tm_sec);
         }
     };
 } // namespace slfmt
