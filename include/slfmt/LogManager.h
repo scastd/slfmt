@@ -12,7 +12,7 @@
 #ifndef SLFMT_LOG_MANAGER_H
 #define SLFMT_LOG_MANAGER_H
 
-#include "CombinedLogger.h"
+#include <slfmt/CombinedLogger.h>
 #include <slfmt/ConsoleLogger.h>
 #include <slfmt/LoggerBase.h>
 
@@ -36,6 +36,7 @@ namespace slfmt {
     class LogManager {
     public:
         LogManager() = delete;
+
         ~LogManager() = delete;
 
         static std::unique_ptr<LoggerBase> GetLogger(const std::string_view &clazz) {
@@ -49,6 +50,11 @@ namespace slfmt {
         static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz,
                                                          const std::string_view &file = s_defaultLoggerFilename) {
             return std::make_unique<FileLogger>(clazz, file);
+        }
+
+        static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz, const std::string_view &file,
+                                                         const size_t fileSize) {
+            return std::make_unique<FileLogger>(clazz, file, fileSize);
         }
 
         template<typename... Loggers>
