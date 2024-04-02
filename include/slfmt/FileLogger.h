@@ -14,6 +14,8 @@
 
 #include <fstream>
 #include <slfmt/LoggerBase.h>
+#include <miniz.h>
+#include <iostream>
 
 namespace slfmt {
     /**
@@ -117,7 +119,9 @@ namespace slfmt {
                 m_stream.close();
 
                 // Backup the current log file.
-                MoveFile(m_file, BackupFileName(m_file));
+                const auto &backupFile = BackupFileName(m_file);
+                MoveFile(m_file, backupFile);
+                CompressBackup(backupFile);
 
                 // Open the new log file.
                 m_stream.open(m_file.data(), std::ios::out | std::ios::app);
@@ -149,6 +153,24 @@ namespace slfmt {
             }
 
             fs::rename(srcPath, dstPath);
+        }
+
+        static void CompressBackup(const std::string_view &backupFile) {
+            const auto &filename = backupFile.data();
+            const auto &zipFilename = fmt::format("{}.zip", fs::path(filename).stem().c_str());
+            mz_zip_archive zip{};
+
+            memset(&zip, 0, sizeof(zip));
+            mz_zip_writer_init_file(&zip, zipFilename.c_str(), 0);
+
+            mz_zip_writer_add_file(&zip, filename, filename, "", 0, MZ_BEST_COMPRESSION);
+
+            mz_zip_writer_finalize_archive(&zip);
+            mz_zip_writer_end(&zip);
+
+            std::cout << "Compressed backup file: " << zipFilename << std::endl;
+
+            fs::remove(filename);
         }
 
         /**

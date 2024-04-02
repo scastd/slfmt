@@ -8,7 +8,7 @@ private:
 
 public:
     void Test(std::string_view s) const {
-        for (int i = 0; i < 100000; ++i) {
+        for (int i = 0; i < 20000; ++i) {
             s_logger->Info("Test message with number: {}", i);
         }
     }
