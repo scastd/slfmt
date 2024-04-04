@@ -1,5 +1,8 @@
-add_executable(basic_usage basic_usage.cpp)
-add_executable(rolling_usage rolling_usage.cpp)
+function(slfmt_test name)
+    add_executable(${name} ${name}.cpp)
+    target_link_libraries(${name} fmt::fmt miniz)
+endfunction()
 
-target_link_libraries(basic_usage fmt::fmt miniz)
-target_link_libraries(rolling_usage fmt::fmt miniz)
+slfmt_test(basic_usage)
+slfmt_test(rolling_usage)
+slfmt_test(combined_logger)
