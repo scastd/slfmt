@@ -28,7 +28,7 @@ namespace slfmt {
          * @param loggers Loggers to log to.
          */
         CombinedLogger(const std::string_view &clazz, std::vector<std::unique_ptr<LoggerBase>> loggers)
-            : LoggerBase(clazz), m_loggers(std::move(loggers)) {}
+                : LoggerBase(clazz), m_loggers(std::move(loggers)) {}
 
         ~CombinedLogger() override {
             m_loggers.clear();
