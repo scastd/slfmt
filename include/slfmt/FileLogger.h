@@ -76,7 +76,7 @@ namespace slfmt {
         /**
          * @brief The current size of the log file.
          */
-        std::streamsize m_currentFileSize = 0;
+        size_t m_currentFileSize = 0;
 
         /**
          * @brief The directory to store the backup log files.
@@ -117,8 +117,8 @@ namespace slfmt {
          * @param msg The message to write.
          */
         void WriteAndFlushStream(std::string_view msg) {
-            auto msgSize = (std::streamsize) msg.size();
-            m_stream.write(msg.data(), msgSize).flush();
+            auto msgSize = msg.size();
+            m_stream.write(msg.data(), (std::streamsize) msgSize).flush();
 
             m_currentFileSize += msgSize;
 
@@ -152,12 +152,17 @@ namespace slfmt {
         static std::string BackupFileName(const fs::path &file) {
             auto now = std::chrono::system_clock::now();
             auto time = std::chrono::system_clock::to_time_t(now);
-            struct tm tm{};
-            localtime_r(&time, &tm);
+            struct tm tm {};
 
-            return fmt::format("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}",
-                               file.stem().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min,
-                               tm.tm_sec);
+#ifdef _WIN32
+            localtime_s(&tm, &time);
+#else
+            localtime_r(&time, &tm);
+#endif
+
+            return fmt::format(fmt::runtime("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}"),
+                               file.stem().string().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
+                               tm.tm_min, tm.tm_sec);
         }
     };
 } // namespace slfmt

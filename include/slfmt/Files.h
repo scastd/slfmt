@@ -50,14 +50,14 @@ namespace slfmt {
          * @return The path to the zip archive.
          */
         static fs::path CompressFile(const fs::path &file, const std::string &name) {
-            const char *fileStr = file.c_str();
+            const auto fileStr = file.string();
             const auto zipFilename = fmt::format("{}.zip", name);
             mz_zip_archive zip{};
 
             memset(&zip, 0, sizeof(zip));
             mz_zip_writer_init_file(&zip, zipFilename.c_str(), 0);
 
-            mz_zip_writer_add_file(&zip, fileStr, fileStr, "", 0, MZ_BEST_COMPRESSION);
+            mz_zip_writer_add_file(&zip, fileStr.c_str(), fileStr.c_str(), "", 0, MZ_BEST_COMPRESSION);
 
             mz_zip_writer_finalize_archive(&zip);
             mz_zip_writer_end(&zip);
