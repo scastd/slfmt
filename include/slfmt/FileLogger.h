@@ -47,6 +47,17 @@ namespace slfmt {
             if (!fs::exists(s_backupDir)) {
                 fs::create_directory(s_backupDir);
             }
+
+            // If the file exists, get its size.
+            if (fs::exists(file)) {
+                m_currentFileSize = fs::file_size(file);
+
+                // If the file size is greater than the specified file size limit, backup the file.
+                if (m_currentFileSize >= fileSizeLimit) {
+                    CreateBackup();
+                    m_currentFileSize = 0;
+                }
+            }
         }
 
         ~FileLogger() override {
@@ -122,24 +133,7 @@ namespace slfmt {
 
             m_currentFileSize += msgSize;
 
-            if (m_currentFileSize >= fileSizeLimit) {
-                m_stream.close();
-
-                // Backup the current log file.
-                const auto &backupFilename = BackupFileName(m_file);
-                const auto compressedFile = Files::CompressFile(m_file.data(), backupFilename);
-                Files::MoveFileToDir(compressedFile, s_backupDir);
-                Files::ClearFile(m_file);
-
-                // Open the new log file.
-                m_stream.open(m_file.data(), std::ios::out | std::ios::app);
-
-                if (!m_stream.is_open()) {
-                    throw std::runtime_error("Failed to open log file.");
-                }
-
-                m_currentFileSize = 0;
-            }
+            CheckForBackup();
         }
 
         /**
@@ -152,7 +146,7 @@ namespace slfmt {
         static std::string BackupFileName(const fs::path &file) {
             auto now = std::chrono::system_clock::now();
             auto time = std::chrono::system_clock::to_time_t(now);
-            struct tm tm {};
+            struct tm tm{};
 
 #ifdef _WIN32
             localtime_s(&tm, &time);
@@ -163,6 +157,29 @@ namespace slfmt {
             return fmt::format(fmt::runtime("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}"),
                                file.stem().string().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
                                tm.tm_min, tm.tm_sec);
+        }
+
+        void CheckForBackup() {
+            if (m_currentFileSize >= fileSizeLimit) {
+                m_stream.close();
+                CreateBackup();
+
+                // Open the new log file.
+                m_stream.open(m_file.data(), std::ios::out | std::ios::app);
+
+                if (!m_stream.is_open()) {
+                    throw std::runtime_error("Failed to open log file.");
+                }
+
+                m_currentFileSize = 0;
+            }
+        }
+
+        void CreateBackup() const {
+            const auto &backupFilename = BackupFileName(m_file);
+            const auto compressedFile = Files::CompressFile(m_file.data(), backupFilename);
+            Files::MoveFileToDir(compressedFile, s_backupDir);
+            Files::ClearFile(m_file);
         }
     };
 } // namespace slfmt
