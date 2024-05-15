@@ -71,8 +71,7 @@ namespace slfmt {
          * @param file The file to clear.
          */
         static void ClearFile(const fs::path &file) {
-            std::ofstream ofs(file, std::ios::out | std::ios::trunc);
-            ofs.close();
+            std::ofstream(file, std::ios::out | std::ios::trunc).close();
         }
     };
 } // slfmt
