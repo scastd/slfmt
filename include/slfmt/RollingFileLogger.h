@@ -1,3 +1,14 @@
+/*
+* slfmt - A simple logging library for C++
+*
+* RollingFileLogger.h - Rolling file logger for slfmt
+*
+* Copyright (c) 2023 Samuel Castrillo Domínguez
+* All rights reserved.
+*
+* For more information, please see the LICENSE file.
+*/
+
 #ifndef SLFMT_ROLLING_FILE_LOGGER_H
 #define SLFMT_ROLLING_FILE_LOGGER_H
 
