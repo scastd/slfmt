@@ -15,15 +15,20 @@
 #include <slfmt/CombinedLogger.h>
 #include <slfmt/ConsoleLogger.h>
 #include <slfmt/LoggerBase.h>
+#include <slfmt/RollingFileLogger.h>
 
 #define SLFMT_CONSOLE_LOGGER(clazz) slfmt::LogManager::GetConsoleLogger(#clazz)
 #define SLFMT_FILE_LOGGER(clazz) slfmt::LogManager::GetFileLogger(#clazz)
 #define SLFMT_FILE_LOGGER_NAME(clazz, filename) slfmt::LogManager::GetFileLogger(#clazz, filename)
+#define SLFMT_ROLLING_FILE_LOGGER_NAME(clazz, filename, fileSize)                                                      \
+    slfmt::LogManager::GetRollingFileLogger(#clazz, filename, fileSize)
 
 #define SLFMT_CONSOLE_LOGGER_FIELD(name, clazz) static inline const auto name = SLFMT_CONSOLE_LOGGER(clazz)
 #define SLFMT_FILE_LOGGER_FIELD(name, clazz) static inline const auto name = SLFMT_FILE_LOGGER(clazz)
 #define SLFMT_FILE_LOGGER_NAME_FIELD(name, clazz, filename)                                                            \
     static inline const auto name = SLFMT_FILE_LOGGER_NAME(clazz, filename)
+#define SLFMT_ROLLING_FILE_LOGGER_NAME_FIELD(name, clazz, filename, fileSize)                                          \
+    static inline const auto name = SLFMT_ROLLING_FILE_LOGGER_NAME(clazz, filename, fileSize)
 #define SLFMT_COMBINED_LOGGER_FIELD(name, clazz, ...)                                                                  \
     static inline const auto name = slfmt::LogManager::GetCombinedLogger(#clazz, __VA_ARGS__)
 
@@ -52,9 +57,9 @@ namespace slfmt {
             return std::make_unique<FileLogger>(clazz, file);
         }
 
-        static std::unique_ptr<LoggerBase> GetFileLogger(const std::string_view &clazz, const std::string_view &file,
-                                                         const size_t fileSize) {
-            return std::make_unique<FileLogger>(clazz, file, fileSize);
+        static std::unique_ptr<LoggerBase> GetRollingFileLogger(const std::string_view &clazz,
+                                                                const std::string_view &file, const size_t fileSize) {
+            return std::make_unique<RollingFileLogger>(clazz, file, fileSize);
         }
 
         template<typename... Loggers>

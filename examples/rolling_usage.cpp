@@ -3,8 +3,8 @@
 
 class TestClass {
 private:
-    static inline const auto s_logger = slfmt::LogManager::GetFileLogger("TestClass", s_defaultLoggerFilename,
-                                                                         1024 * 5);
+    static inline const auto s_logger =
+            slfmt::LogManager::GetRollingFileLogger("TestClass", s_defaultLoggerFilename, 1024 * 5);
 
 public:
     void Test(std::string_view s) const {

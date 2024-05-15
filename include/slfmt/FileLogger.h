@@ -21,44 +21,14 @@ namespace slfmt {
      */
     class FileLogger : public LoggerBase {
     public:
-        static const size_t DEFAULT_FILE_SIZE = 1024 * 1024 * 5; // 5 MB
-        static const size_t MIN_FILE_SIZE = 1024 * 1024; // 1 MB
-
         /**
          * @brief Constructs a new logger for the specified class and file.
          *
          * @param clazz The class to create a logger for.
          * @param file The file to log to.
-         * @param fileSize The maximum size (in bytes) of the log file before rolling it over.
          */
-        FileLogger(const std::string_view &clazz, const std::string_view &file,
-                   const size_t fileSize = DEFAULT_FILE_SIZE)
-                : LoggerBase(clazz), m_stream(file.data(), std::ios::out | std::ios::app), m_file(file.data()),
-                  fileSizeLimit(fileSize) {
-            if (fileSize < MIN_FILE_SIZE) {
-                // Warn the user that the specified size is too small. This could lead to a lot of file rollovers
-                // and/or data loss.
-                Warn("Specified file size is too small. Using the minimum allowed size ({} MB).",
-                     MIN_FILE_SIZE / 1024 / 1024);
-
-                fileSizeLimit = MIN_FILE_SIZE;
-            }
-
-            if (!fs::exists(s_backupDir)) {
-                fs::create_directory(s_backupDir);
-            }
-
-            // If the file exists, get its size.
-            if (fs::exists(file)) {
-                m_currentFileSize = fs::file_size(file);
-
-                // If the file size is greater than the specified file size limit, backup the file.
-                if (m_currentFileSize >= fileSizeLimit) {
-                    CreateBackup();
-                    m_currentFileSize = 0;
-                }
-            }
-        }
+        FileLogger(const std::string_view &clazz, const std::string_view &file)
+            : LoggerBase(clazz), m_stream(file.data(), std::ios::out | std::ios::app) {}
 
         ~FileLogger() override {
             m_stream.flush(); // Flush the stream before closing the file.
@@ -73,26 +43,6 @@ namespace slfmt {
          * multiple instances of loggers, writing to the same file <b>without</b> overwriting each other.
          */
         std::ofstream m_stream;
-
-        /**
-         * @brief The file to log to.
-         */
-        const std::string_view m_file;
-
-        /**
-         * @brief The maximum size (in bytes) of the log file before rolling it over.
-         */
-        size_t fileSizeLimit;
-
-        /**
-         * @brief The current size of the log file.
-         */
-        size_t m_currentFileSize = 0;
-
-        /**
-         * @brief The directory to store the backup log files.
-         */
-        static const inline fs::path s_backupDir = fs::path("logs");
 
         void Trace_Internal(std::string_view msg) override {
             WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
@@ -122,64 +72,12 @@ namespace slfmt {
          * @brief Writes the specified message to the file and flushes the stream.
          *
          * @note When flushing the stream, the message is written to the file immediately. So, if the program
-         * crashes, the message will be written to the file before the crash. In addition, the file is rolled
-         * over when the current file size exceeds the specified file size limit.
+         * crashes, the message will be written to the file before the crash.
          *
          * @param msg The message to write.
          */
         void WriteAndFlushStream(std::string_view msg) {
-            auto msgSize = msg.size();
-            m_stream.write(msg.data(), (std::streamsize) msgSize).flush();
-
-            m_currentFileSize += msgSize;
-
-            CheckForBackup();
-        }
-
-        /**
-         * @brief Generates a backup file name for the specified file.
-         *
-         * @param file The file to generate a backup file name for.
-         *
-         * @return The backup file name.
-         */
-        static std::string BackupFileName(const fs::path &file) {
-            auto now = std::chrono::system_clock::now();
-            auto time = std::chrono::system_clock::to_time_t(now);
-            struct tm tm{};
-
-#ifdef _WIN32
-            localtime_s(&tm, &time);
-#else
-            localtime_r(&time, &tm);
-#endif
-
-            return fmt::format(fmt::runtime("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}"),
-                               file.stem().string().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
-                               tm.tm_min, tm.tm_sec);
-        }
-
-        void CheckForBackup() {
-            if (m_currentFileSize >= fileSizeLimit) {
-                m_stream.close();
-                CreateBackup();
-
-                // Open the new log file.
-                m_stream.open(m_file.data(), std::ios::out | std::ios::app);
-
-                if (!m_stream.is_open()) {
-                    throw std::runtime_error("Failed to open log file.");
-                }
-
-                m_currentFileSize = 0;
-            }
-        }
-
-        void CreateBackup() const {
-            const auto &backupFilename = BackupFileName(m_file);
-            const auto compressedFile = Files::CompressFile(m_file.data(), backupFilename);
-            Files::MoveFileToDir(compressedFile, s_backupDir);
-            Files::ClearFile(m_file);
+            m_stream.write(msg.data(), (std::streamsize) msg.size()).flush();
         }
     };
 } // namespace slfmt
