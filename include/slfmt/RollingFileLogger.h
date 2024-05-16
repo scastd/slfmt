@@ -92,32 +92,32 @@ namespace slfmt {
         static const inline fs::path s_backupDir = fs::path("logs");
 
         void Trace_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 
         void Debug_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 
         void Info_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 
         void Warn_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 
         void Error_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
             CheckAndBackupLogFile();
         }
 

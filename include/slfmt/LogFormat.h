@@ -27,6 +27,27 @@ namespace slfmt {
          */
         static const LogFormat DEFAULT;
 
+        static LogFormat FORMAT;
+
+        /**
+         * @brief Gets the log format to use by the loggers.
+         *
+         * @return The log format to use.
+         */
+        static LogFormat Get() {
+            return FORMAT;
+        }
+
+        /**
+         * @brief Sets the log format to use by the loggers. This will affect all loggers, so
+         * it is recommended to set the log format before creating any loggers.
+         *
+         * @param format Log format to use.
+         */
+        static void Set(const LogFormat &format) {
+            FORMAT = format;
+        }
+
         /**
          * @brief Formats the log message with the specified replacements.
          *
@@ -171,6 +192,7 @@ namespace slfmt {
     };
 
     const LogFormat LogFormat::DEFAULT = LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build();
+    LogFormat LogFormat::FORMAT = LogFormat::DEFAULT;
 } // namespace slfmt
 
 #endif // SLFMT_LOG_FORMAT_H
