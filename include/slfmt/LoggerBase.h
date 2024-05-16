@@ -129,6 +129,7 @@ namespace slfmt {
             return m_class;
         }
 
+        [[deprecated("Use LogFormat::GetTimestampString() instead.")]]
         static std::string GetTimestampString() {
             auto now = std::chrono::system_clock::now();
             auto nowTime = std::chrono::system_clock::to_time_t(now);
@@ -146,6 +147,7 @@ namespace slfmt {
             return ss.str();
         }
 
+        [[deprecated("Use LogFormat::GetThreadIdString() instead.")]]
         static std::string GetThreadIdString() {
             std::stringstream ss;
             ss << std::this_thread::get_id();

@@ -27,6 +27,7 @@
 
 #include "slfmt/Color.h"
 #include "slfmt/Level.h"
+#include "slfmt/LogFormat.h"
 #include "slfmt/Version.h"
 
 #include "slfmt/ConsoleLogger.h"

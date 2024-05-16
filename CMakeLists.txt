@@ -71,6 +71,7 @@ set(SLFMT_SOURCES
         include/slfmt/CombinedLogger.h
         include/slfmt/Files.h
         include/slfmt/RollingFileLogger.h
+        include/slfmt/LogFormat.h
 )
 
 add_library(slfmt STATIC src/slfmt.cpp ${SLFMT_SOURCES})
