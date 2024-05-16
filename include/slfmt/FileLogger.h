@@ -45,27 +45,27 @@ namespace slfmt {
         std::ofstream m_stream;
 
         void Trace_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
         }
 
         void Debug_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
         }
 
         void Info_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
         }
 
         void Warn_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
         }
 
         void Error_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            WriteAndFlushStream(fmt::format(fmt::runtime(SLFMT_LOG_FORMAT), LOG_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
+            WriteAndFlushStream(LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
         }
 
         /**

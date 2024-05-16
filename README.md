@@ -137,6 +137,6 @@ This project is licensed under the MIT License: see the [LICENSE](LICENSE.txt) f
     - [X] Rotating log files.
     - [X] Log file size limit.
     - [x] Log file path / name.
-- [ ] Make a builder for log format.
+- [x] Make a builder for log format.
 - [ ] Add support for custom log levels.
 - [ ] Add support for custom log level colors.

@@ -24,21 +24,12 @@
 #include "Files.h"
 #include "Level.h"
 
-#define LOG_PARAMS_FOR_LEVEL(level) GetTimestampString(), level, GetClass(), GetThreadIdString(), msg
-
-/**
- * @brief The default log format.
- *
- * @details The default log format is as follows:
- * <ol>
- *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS`.</li>
- *  <li>Level: the level of the log.</li>
- *  <li>Class: the class that logged the message.</li>
- *  <li>Thread: the thread id.</li>
- *  <li>Message: the message to log.</li>
- * </ol>
- */
-static const std::string SLFMT_LOG_FORMAT = "{} {} ({}) [Thread-{}] {}\n";
+#define FORMAT_MAPPED_PARAMS_FOR_LEVEL(level)                                                                          \
+    {                                                                                                                  \
+        { "{L}", level }, { "{C}", GetClass() }, {                                                                     \
+            "{M}", msg                                                                                                 \
+        }                                                                                                              \
+    }
 
 namespace slfmt {
     class LoggerBase {
@@ -129,38 +120,11 @@ namespace slfmt {
             return m_class;
         }
 
-        [[deprecated("Use LogFormat::GetTimestampString() instead.")]]
-        static std::string GetTimestampString() {
-            auto now = std::chrono::system_clock::now();
-            auto nowTime = std::chrono::system_clock::to_time_t(now);
-            auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-            struct tm tm = {};
-
-#ifdef _WIN32
-            localtime_s(&tm, &nowTime);
-#else
-            localtime_r(&nowTime, &tm);
-#endif
-
-            std::stringstream ss;
-            ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << ',' << std::setfill('0') << std::setw(3) << nowMs.count();
-            return ss.str();
-        }
-
-        [[deprecated("Use LogFormat::GetThreadIdString() instead.")]]
-        static std::string GetThreadIdString() {
-            std::stringstream ss;
-            ss << std::this_thread::get_id();
-            return ss.str();
-        }
-
     public:
         LoggerBase(const LoggerBase &) = delete;
-
         LoggerBase(LoggerBase &&) = delete;
 
         LoggerBase &operator=(const LoggerBase &) = delete;
-
         LoggerBase &operator=(LoggerBase &&) = delete;
 
         virtual ~LoggerBase() = default;

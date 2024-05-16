@@ -33,7 +33,7 @@ namespace slfmt {
          *
          * @return The formatted log message.
          */
-        FMT_NODISCARD std::string Format(const std::unordered_map<std::string, std::string> &replaces) const {
+        FMT_NODISCARD std::string Format(const std::unordered_map<std::string_view, std::string_view> &replaces) const {
             std::string formatted = m_format;
 
             for (const auto &function: m_functions) {

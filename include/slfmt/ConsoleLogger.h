@@ -29,27 +29,33 @@ namespace slfmt {
 
     private:
         void Trace_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::TRACE_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING));
+            fmt::print(slfmt::color::TRACE_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
         }
 
         void Debug_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::DEBUG_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING));
+            fmt::print(slfmt::color::DEBUG_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
         }
 
         void Info_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::INFO_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING));
+            fmt::print(slfmt::color::INFO_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
         }
 
         void Warn_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::WARN_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING));
+            fmt::print(slfmt::color::WARN_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
         }
 
         void Error_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::ERROR_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING));
+            fmt::print(slfmt::color::ERROR_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            fmt::print(slfmt::color::FATAL_COLOR, SLFMT_LOG_FORMAT, LOG_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING));
+            fmt::print(slfmt::color::FATAL_COLOR,
+                       LogFormat::DEFAULT.Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
         }
     };
 } // namespace slfmt
