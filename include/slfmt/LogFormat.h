@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <functional>
 #include <iomanip>
+#include <sstream>
 #include <string>
 #include <thread>
 #include <vector>
