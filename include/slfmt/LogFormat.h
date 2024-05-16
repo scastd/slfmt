@@ -119,6 +119,13 @@ namespace slfmt {
         std::string m_format{};
         std::vector<std::function<std::string()>> m_functions{};
 
+        /**
+         * @brief Gets the current timestamp as a string.
+         *
+         * @note The format is as follows: "YYYY-MM-DD HH:MM:SS,mmm".
+         *
+         * @return The current timestamp as a string.
+         */
         static std::string GetTimestampString() {
             auto now = std::chrono::system_clock::now();
             auto nowTime = std::chrono::system_clock::to_time_t(now);
@@ -136,6 +143,11 @@ namespace slfmt {
             return ss.str();
         }
 
+        /**
+         * @brief Gets the current thread ID as a string.
+         *
+         * @return The current thread ID as a string.
+         */
         static std::string GetThreadIdString() {
             std::stringstream ss;
             ss << std::this_thread::get_id();
