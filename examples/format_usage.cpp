@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
                                         .Build();
 
     std::string string = lf.Format({ { "{C}", "TestClass" }, { "{L}", "INFO" }, { "{M}", "12345" } });
-    fmt::print(string);
+    fmt::print("{}", string);
 
     return 0;
 }
