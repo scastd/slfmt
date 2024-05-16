@@ -13,6 +13,20 @@ namespace slfmt {
     class LogFormat {
     public:
         /**
+         * @brief Default log format.
+         *
+         * @details The default log format is as follows:
+         * <ol>
+         *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS,mmm`.</li>
+         *  <li>Level: the level of the log.</li>
+         *  <li>Class: the class that logged the message.</li>
+         *  <li>Thread: the thread id.</li>
+         *  <li>Message: the message to log.</li>
+         * </ol>
+         */
+        static const LogFormat DEFAULT;
+
+        /**
          * @brief Formats the log message with the specified replacements.
          *
          * @param replaces Replacements to use.
@@ -154,6 +168,8 @@ namespace slfmt {
             return ss.str();
         }
     };
+
+    const LogFormat LogFormat::DEFAULT = LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build();
 } // namespace slfmt
 
 #endif // SLFMT_LOG_FORMAT_H
