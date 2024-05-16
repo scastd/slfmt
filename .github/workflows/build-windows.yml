@@ -20,8 +20,6 @@ jobs:
 
       - name: Install MSVC
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          toolset: 16.0
 
       - name: Configure, Build, and Package
         run: |
