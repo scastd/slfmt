@@ -97,7 +97,6 @@ namespace slfmt {
         private:
             std::vector<std::string> m_formats{};
             std::vector<std::function<std::string()>> m_functions{};
-            int m_index = 0;
 
             /**
              * @brief Delimits a string with the specified delimiters.
