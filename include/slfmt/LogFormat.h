@@ -17,13 +17,17 @@ namespace slfmt {
          * @brief Gets the log format to use by the loggers.
          *
          * @return The log format to use.
+         *
+         * @note If the log format is empty (or not set yet), it will be initialized with
+         * the default log format.
          */
         static LogFormat Get() {
-            if (s_format.IsEmpty()) {
-                s_format = LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build();
+            if (s_format == nullptr || s_format->IsEmpty()) {
+                s_format = std::make_unique<LogFormat>(
+                        LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build());
             }
 
-            return s_format;
+            return *s_format;
         }
 
         /**
@@ -33,7 +37,7 @@ namespace slfmt {
          * @param format Log format to use.
          */
         static void Set(const LogFormat &format) {
-            s_format = format;
+            s_format = std::make_unique<LogFormat>(format);
         }
 
         /**
@@ -159,7 +163,7 @@ namespace slfmt {
          *  <li>Message: the message to log.</li>
          * </ol>
          */
-        static LogFormat s_format;
+        static inline std::unique_ptr<LogFormat> s_format = nullptr;
 
         /**
          * @brief Gets the current timestamp as a string.
