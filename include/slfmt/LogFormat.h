@@ -14,28 +14,16 @@ namespace slfmt {
     class LogFormat {
     public:
         /**
-         * @brief Default log format.
-         *
-         * @details The default log format is as follows:
-         * <ol>
-         *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS,mmm`.</li>
-         *  <li>Level: the level of the log.</li>
-         *  <li>Class: the class that logged the message.</li>
-         *  <li>Thread: the thread id.</li>
-         *  <li>Message: the message to log.</li>
-         * </ol>
-         */
-        static const LogFormat DEFAULT;
-
-        static LogFormat FORMAT;
-
-        /**
          * @brief Gets the log format to use by the loggers.
          *
          * @return The log format to use.
          */
         static LogFormat Get() {
-            return FORMAT;
+            if (s_format.IsEmpty()) {
+                s_format = LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build();
+            }
+
+            return s_format;
         }
 
         /**
@@ -45,7 +33,7 @@ namespace slfmt {
          * @param format Log format to use.
          */
         static void Set(const LogFormat &format) {
-            FORMAT = format;
+            s_format = format;
         }
 
         /**
@@ -56,7 +44,7 @@ namespace slfmt {
          * @return The formatted log message.
          */
         FMT_NODISCARD std::string Format(const std::unordered_map<std::string_view, std::string_view> &replaces) const {
-            std::string formatted = m_format;
+            std::string formatted = m_format_string;
 
             for (const auto &function: m_functions) {
                 formatted.replace(formatted.find("{}"), 2, function());
@@ -67,6 +55,10 @@ namespace slfmt {
             }
 
             return formatted;
+        }
+
+        FMT_NODISCARD bool IsEmpty() const {
+            return m_format_string.empty();
         }
 
         /**
@@ -117,14 +109,14 @@ namespace slfmt {
 
                 // Each format is separated by a space (except for the last one).
                 for (size_t i = 0; i < m_formats.size(); ++i) {
-                    logFormat.m_format += m_formats[i];
+                    logFormat.m_format_string += m_formats[i];
 
                     if (i != m_formats.size() - 1) {
-                        logFormat.m_format += " ";
+                        logFormat.m_format_string += " ";
                     }
                 }
 
-                logFormat.m_format += "\n"; // Add a newline at the end.
+                logFormat.m_format_string += "\n"; // Add a newline at the end.
                 logFormat.m_functions = m_functions;
 
                 return logFormat;
@@ -152,8 +144,22 @@ namespace slfmt {
     private:
         LogFormat() = default;
 
-        std::string m_format{};
+        std::string m_format_string{};
         std::vector<std::function<std::string()>> m_functions{};
+
+        /**
+         * @brief The format to use in the logs.
+         *
+         * @note It is first initialized as the default log format which is composed of the following:
+         * <ol>
+         *  <li>Timestamp: composed of the date and time in the format `YYYY-MM-DD HH:MM:SS,mmm`.</li>
+         *  <li>Level: the level of the log.</li>
+         *  <li>Class: the class that logged the message.</li>
+         *  <li>Thread: the thread id.</li>
+         *  <li>Message: the message to log.</li>
+         * </ol>
+         */
+        static LogFormat s_format;
 
         /**
          * @brief Gets the current timestamp as a string.
@@ -190,9 +196,6 @@ namespace slfmt {
             return ss.str();
         }
     };
-
-    const LogFormat LogFormat::DEFAULT = LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build();
-    LogFormat LogFormat::FORMAT = LogFormat::DEFAULT;
 } // namespace slfmt
 
 #endif // SLFMT_LOG_FORMAT_H
