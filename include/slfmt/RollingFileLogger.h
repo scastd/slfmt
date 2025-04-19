@@ -17,8 +17,8 @@
 namespace slfmt {
     class RollingFileLogger : public LoggerBase {
     public:
-        static const size_t DEFAULT_FILE_SIZE = 1024 * 1024 * 5; // 5 MB
-        static const size_t MIN_FILE_SIZE = 1024 * 1024;         // 1 MB
+        static constexpr size_t DEFAULT_FILE_SIZE = 1024 * 1024 * 5; // 5 MB
+        static constexpr size_t MIN_FILE_SIZE = 1024 * 1024;         // 1 MB
 
         /**
          * @brief Constructs a new logger for the specified class and file.
@@ -66,7 +66,7 @@ namespace slfmt {
         /**
          * @brief The output stream for the file to log to.
          *
-         * @note the mode <b>std::ios::app <i>(seeks to end before each write)</i></b> allows having
+         * @note the mode <b>std::ios::app (seek to end before each write)</b> allows having
          * multiple instances of loggers, writing to the same file <b>without</b> overwriting each other.
          */
         std::ofstream m_stream;
@@ -89,35 +89,35 @@ namespace slfmt {
         /**
          * @brief The directory to store the backup log files.
          */
-        static const inline fs::path s_backupDir = fs::path("logs");
+        static const inline auto s_backupDir = fs::path("logs");
 
         void Trace_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
         void Debug_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
         void Info_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
         void Warn_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
         void Error_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING));
             CheckAndBackupLogFile();
         }
 
@@ -127,12 +127,13 @@ namespace slfmt {
          * @note When flushing the stream, the message is written to the file immediately. So, if the program
          * crashes, the message will be written to the file <b>before</b> the crash.
          *
-         * @param msg The message to write.
+         * @param format_map The format map to write.
          */
-        void WriteAndFlushStream(std::string_view msg) {
-            auto msgSize = msg.size();
-            m_stream.write(msg.data(), (std::streamsize) msgSize).flush();
+        void WriteAndFlushStream(const std::unordered_map<std::string_view, std::string_view> &format_map) {
+            const auto msg = LogFormat::Get().Format(format_map);
+            const auto msgSize = msg.size();
 
+            m_stream.write(msg.data(), (std::streamsize) msgSize).flush();
             m_currentFileSize += msgSize;
         }
 
@@ -147,7 +148,7 @@ namespace slfmt {
             auto now = std::chrono::system_clock::now();
             auto time = std::chrono::system_clock::to_time_t(now);
 
-            struct tm tm {};
+            tm tm{};
 
 #ifdef _WIN32
             localtime_s(&tm, &time);
@@ -155,9 +156,13 @@ namespace slfmt {
             localtime_r(&time, &tm);
 #endif
 
+            // Adjust fields
+            tm.tm_year += 1900;
+            tm.tm_mon += 1;
+
             return fmt::format(fmt::runtime("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}-{:02d}"),
-                               file.stem().string().c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour,
-                               tm.tm_min, tm.tm_sec);
+                               file.stem().string().c_str(), tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min,
+                               tm.tm_sec);
         }
 
         /**

@@ -23,8 +23,8 @@ namespace slfmt {
          */
         static LogFormat Get() {
             if (s_format == nullptr || s_format->IsEmpty()) {
-                s_format = std::make_unique<LogFormat>(
-                        LogFormat::Builder().Timestamp().Level().Class().ThreadId().Message().Build());
+                auto builder = Builder().Timestamp().Level().Class().ThreadId().Message();
+                s_format = std::make_unique<LogFormat>(builder.Build());
             }
 
             return *s_format;
@@ -36,9 +36,7 @@ namespace slfmt {
          *
          * @param format Log format to use.
          */
-        static void Set(const LogFormat &format) {
-            s_format = std::make_unique<LogFormat>(format);
-        }
+        static void Set(const LogFormat &format) { s_format = std::make_unique<LogFormat>(format); }
 
         /**
          * @brief Formats the log message with the specified replacements.
@@ -61,9 +59,7 @@ namespace slfmt {
             return formatted;
         }
 
-        FMT_NODISCARD bool IsEmpty() const {
-            return m_format_string.empty();
-        }
+        FMT_NODISCARD bool IsEmpty() const { return m_format_string.empty(); }
 
         /**
          * @brief Builder for the log format.
@@ -73,46 +69,51 @@ namespace slfmt {
             Builder() = default;
 
             Builder &Timestamp(const std::string &leftDelimiter = "", const std::string &rightDelimiter = "") {
-                m_formats.push_back(Delimit("{}", leftDelimiter, rightDelimiter));
+                const auto delimited_string = Delimit("{}", leftDelimiter, rightDelimiter);
+                m_formats.push_back(delimited_string);
                 m_functions.emplace_back(GetTimestampString);
                 return *this;
             }
 
             Builder &Level(const std::string &leftDelimiter = "", const std::string &rightDelimiter = "") {
-                m_formats.push_back(Delimit("{}", leftDelimiter, rightDelimiter));
-                m_functions.emplace_back([]() {
+                const auto delimited_string = Delimit("{}", leftDelimiter, rightDelimiter);
+                m_formats.push_back(delimited_string);
+                m_functions.emplace_back([] {
                     return "{L}";
                 });
                 return *this;
             }
 
             Builder &Class(const std::string &leftDelimiter = "(", const std::string &rightDelimiter = ")") {
-                m_formats.push_back(Delimit("{}", leftDelimiter, rightDelimiter));
-                m_functions.emplace_back([]() {
+                const auto delimited_string = Delimit("{}", leftDelimiter, rightDelimiter);
+                m_formats.push_back(delimited_string);
+                m_functions.emplace_back([] {
                     return "{C}";
                 });
                 return *this;
             }
 
             Builder &ThreadId(const std::string &leftDelimiter = "[Thread-", const std::string &rightDelimiter = "]") {
-                m_formats.push_back(Delimit("{}", leftDelimiter, rightDelimiter));
+                const auto delimited_string = Delimit("{}", leftDelimiter, rightDelimiter);
+                m_formats.push_back(delimited_string);
                 m_functions.emplace_back(GetThreadIdString);
                 return *this;
             }
 
             Builder &Message(const std::string &leftDelimiter = "", const std::string &rightDelimiter = "") {
-                m_formats.push_back(Delimit("{}", leftDelimiter, rightDelimiter));
-                m_functions.emplace_back([]() {
+                const auto delimited_string = Delimit("{}", leftDelimiter, rightDelimiter);
+                m_formats.push_back(delimited_string);
+                m_functions.emplace_back([] {
                     return "{M}";
                 });
                 return *this;
             }
 
-            LogFormat Build() {
+            FMT_NODISCARD LogFormat Build() const {
                 LogFormat logFormat;
 
                 // Each format is separated by a space (except for the last one).
-                for (size_t i = 0; i < m_formats.size(); ++i) {
+                for (size_t i = 0; i < m_formats.size(); i++) {
                     logFormat.m_format_string += m_formats[i];
 
                     if (i != m_formats.size() - 1) {
@@ -173,10 +174,10 @@ namespace slfmt {
          * @return The current timestamp as a string.
          */
         static std::string GetTimestampString() {
-            auto now = std::chrono::system_clock::now();
-            auto nowTime = std::chrono::system_clock::to_time_t(now);
-            auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-            struct tm tm = {};
+            const auto now = std::chrono::system_clock::now();
+            const auto nowTime = std::chrono::system_clock::to_time_t(now);
+            const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+            tm tm = {};
 
 #ifdef _WIN32
             localtime_s(&tm, &nowTime);

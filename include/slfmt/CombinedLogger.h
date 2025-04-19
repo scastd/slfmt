@@ -37,37 +37,37 @@ namespace slfmt {
     private:
         std::vector<std::unique_ptr<LoggerBase>> m_loggers;
 
-        void Trace_Internal(std::string_view msg) override {
+        void Trace_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Trace(msg);
             }
         }
 
-        void Debug_Internal(std::string_view msg) override {
+        void Debug_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Debug(msg);
             }
         }
 
-        void Info_Internal(std::string_view msg) override {
+        void Info_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Info(msg);
             }
         }
 
-        void Warn_Internal(std::string_view msg) override {
+        void Warn_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Warn(msg);
             }
         }
 
-        void Error_Internal(std::string_view msg) override {
+        void Error_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Error(msg);
             }
         }
 
-        void Fatal_Internal(std::string_view msg) override {
+        void Fatal_Internal(const std::string_view msg) override {
             for (const auto &logger: m_loggers) {
                 logger->Fatal(msg);
             }

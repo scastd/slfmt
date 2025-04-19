@@ -45,18 +45,18 @@ namespace slfmt {
          * @param level The level to log at.
          * @param msg The message to log.
          */
-        void Log_Internal(const slfmt::Level &level, std::string_view msg) {
-            if (level == slfmt::Level::TRACE) {
+        void Log_Internal(const Level &level, const std::string_view msg) {
+            if (level == Level::TRACE) {
                 Trace_Internal(msg);
-            } else if (level == slfmt::Level::DEBUG) {
+            } else if (level == Level::DEBUG) {
                 Debug_Internal(msg);
-            } else if (level == slfmt::Level::INFO) {
+            } else if (level == Level::INFO) {
                 Info_Internal(msg);
-            } else if (level == slfmt::Level::WARN) {
+            } else if (level == Level::WARN) {
                 Warn_Internal(msg);
-            } else if (level == slfmt::Level::ERROR) {
+            } else if (level == Level::ERROR) {
                 Error_Internal(msg);
-            } else if (level == slfmt::Level::FATAL) {
+            } else if (level == Level::FATAL) {
                 Fatal_Internal(msg);
             }
         }
@@ -109,7 +109,7 @@ namespace slfmt {
          *
          * @param clazz The class to create a logger for.
          */
-        explicit LoggerBase(std::string_view clazz) : m_class(clazz) {}
+        explicit LoggerBase(const std::string_view clazz) : m_class(clazz) {}
 
         /**
          * @brief Gets the class name for the logger.
@@ -134,12 +134,12 @@ namespace slfmt {
          *
          * @tparam Args The types of the arguments to format the message with.
          * @param level The level to log at.
-         * @param msg The message to log.
+         * @param format The format string.
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Log(const slfmt::Level &level, std::string_view msg, Args &&...args) {
-            Log_Internal(level, (std::string) fmt::vformat(msg, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Log(const Level &level, const std::string_view format, Args &&...args) {
+            Log_Internal(level, (std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -150,8 +150,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Trace(std::string_view format, Args &&...args) {
-            Trace_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Trace(const std::string_view format, Args &&...args) {
+            Trace_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -162,8 +162,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Debug(std::string_view format, Args &&...args) {
-            Debug_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Debug(const std::string_view format, Args &&...args) {
+            Debug_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -174,8 +174,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Info(std::string_view format, Args &&...args) {
-            Info_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Info(const std::string_view format, Args &&...args) {
+            Info_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -186,8 +186,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Warn(std::string_view format, Args &&...args) {
-            Warn_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Warn(const std::string_view format, Args &&...args) {
+            Warn_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -198,8 +198,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Error(std::string_view format, Args &&...args) {
-            Error_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Error(const std::string_view format, Args &&...args) {
+            Error_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
 
         /**
@@ -210,8 +210,8 @@ namespace slfmt {
          * @param args The arguments to format the message with.
          */
         template<typename... Args>
-        void Fatal(std::string_view format, Args &&...args) {
-            Fatal_Internal((std::string) fmt::vformat(format, fmt::make_format_args(std::forward<Args>(args)...)));
+        void Fatal(const std::string_view format, Args &&...args) {
+            Fatal_Internal((std::string) fmt::vformat(format, fmt::make_format_args(args...)));
         }
     };
 } // namespace slfmt

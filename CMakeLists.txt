@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.25)
 project(slfmt LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -6,50 +6,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Configure optimization
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if (MSVC)
-        set(OPTIMIZATION_FLAGS "/Od /D \"_DEBUG\"")
-    else ()
-        set(OPTIMIZATION_FLAGS "-O0 -DDEBUG")
-    endif ()
-    message("-- Configuring debug build")
-else ()
-    if (MSVC)
-        set(OPTIMIZATION_FLAGS "/O2 /D \"NDEBUG\"")
-    else ()
-        set(OPTIMIZATION_FLAGS "-O3 -DNDEBUG")
-    endif ()
-    message("-- Configuring release build")
-endif ()
-
-# Enable extra warnings
-set(DESIRED_WARNINGS "-Wall -Wextra -Wconversion -Wunreachable-code -Wno-error=unused-variable -Wshadow -Wfloat-equal")
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(DESIRED_WARNINGS "${DESIRED_WARNINGS} -pedantic-errors -Wold-style-cast -Weffc++ -Wuninitialized")
-endif ()
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(DESIRED_WARNINGS "${DESIRED_WARNINGS} -Wmost")
-endif ()
-
-option(WERROR "Add -Werror flag to build (turns warnings into errors)" OFF)
-
-if (WERROR)
-    if (MSVC)
-        set(ERROR_FLAG "/WX")
-    else ()
-        set(ERROR_FLAG "-Werror")
-    endif ()
-
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ERROR_FLAG}")
-endif ()
+include(cmake/CPM.cmake)
 
 # Include all the source headers of the library
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Add the external dependencies
-add_subdirectory(external/fmt)
-add_subdirectory(external/miniz)
+#add_subdirectory(external/fmt)
+#add_subdirectory(external/miniz)
+CPMAddPackage("gh:fmtlib/fmt#11.1.4")
+CPMAddPackage("gh:richgel999/miniz#3.0.2")
 
 # Add the testing subdirectories
 option(SLFMT_BUILD_TESTS "Build the tests" OFF)

@@ -14,19 +14,19 @@
 
 #include <string>
 
-static const char *const TRACE_LEVEL_STRING = "TRACE";
-static const char *const DEBUG_LEVEL_STRING = "DEBUG";
-static const char *const INFO_LEVEL_STRING = "INFO";
-static const char *const WARN_LEVEL_STRING = "WARN";
-static const char *const ERROR_LEVEL_STRING = "ERROR";
-static const char *const FATAL_LEVEL_STRING = "FATAL";
-static const char *const UNKNOWN_LEVEL_STRING = "UNKNOWN";
+static const auto TRACE_LEVEL_STRING = "TRACE";
+static const auto DEBUG_LEVEL_STRING = "DEBUG";
+static const auto INFO_LEVEL_STRING = "INFO";
+static const auto WARN_LEVEL_STRING = "WARN";
+static const auto ERROR_LEVEL_STRING = "ERROR";
+static const auto FATAL_LEVEL_STRING = "FATAL";
+static const auto UNKNOWN_LEVEL_STRING = "UNKNOWN";
 
 namespace slfmt {
     /**
      * @brief Log levels.
      */
-    enum class Level { TRACE, DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN };
+    enum class Level : unsigned int { TRACE, DEBUG, INFO, WARN, ERROR, FATAL, UNKNOWN };
 
     /**
      * @brief Converts a log level to a string.
@@ -34,21 +34,15 @@ namespace slfmt {
      * @param level The level to convert.
      * @return The string representation of the level.
      */
-    static inline std::string LevelToString(const Level &level) {
-        if (level == Level::TRACE) {
-            return TRACE_LEVEL_STRING;
-        } else if (level == Level::DEBUG) {
-            return DEBUG_LEVEL_STRING;
-        } else if (level == Level::INFO) {
-            return INFO_LEVEL_STRING;
-        } else if (level == Level::WARN) {
-            return WARN_LEVEL_STRING;
-        } else if (level == Level::ERROR) {
-            return ERROR_LEVEL_STRING;
-        } else if (level == Level::FATAL) {
-            return FATAL_LEVEL_STRING;
-        } else {
-            return UNKNOWN_LEVEL_STRING;
+    static std::string LevelToString(const Level &level) {
+        switch (level) {
+            case Level::TRACE: return TRACE_LEVEL_STRING;
+            case Level::DEBUG: return DEBUG_LEVEL_STRING;
+            case Level::INFO: return INFO_LEVEL_STRING;
+            case Level::WARN: return WARN_LEVEL_STRING;
+            case Level::ERROR: return ERROR_LEVEL_STRING;
+            case Level::FATAL: return FATAL_LEVEL_STRING;
+            default: return UNKNOWN_LEVEL_STRING;
         }
     }
 
@@ -58,22 +52,15 @@ namespace slfmt {
      * @param level The string to convert.
      * @return The log level.
      */
-    static inline Level StringToLevel(const std::string_view &level) {
-        if (level == TRACE_LEVEL_STRING) {
-            return Level::TRACE;
-        } else if (level == DEBUG_LEVEL_STRING) {
-            return Level::DEBUG;
-        } else if (level == INFO_LEVEL_STRING) {
-            return Level::INFO;
-        } else if (level == WARN_LEVEL_STRING) {
-            return Level::WARN;
-        } else if (level == ERROR_LEVEL_STRING) {
-            return Level::ERROR;
-        } else if (level == FATAL_LEVEL_STRING) {
-            return Level::FATAL;
-        } else {
-            return Level::UNKNOWN;
-        }
+    static Level StringToLevel(const std::string_view &level) {
+        if (level == TRACE_LEVEL_STRING) return Level::TRACE;
+        if (level == DEBUG_LEVEL_STRING) return Level::DEBUG;
+        if (level == INFO_LEVEL_STRING) return Level::INFO;
+        if (level == WARN_LEVEL_STRING) return Level::WARN;
+        if (level == ERROR_LEVEL_STRING) return Level::ERROR;
+        if (level == FATAL_LEVEL_STRING) return Level::FATAL;
+
+        return Level::UNKNOWN;
     }
 } // namespace slfmt
 

@@ -39,33 +39,33 @@ namespace slfmt {
         /**
          * @brief The output stream for the file to log to.
          *
-         * @note the mode <b>std::ios::app <i>(seeks to end before each write)</i></b> allows having
+         * @note the mode <b>std::ios::app (seek to end before each write)</b> allows having
          * multiple instances of loggers, writing to the same file <b>without</b> overwriting each other.
          */
         std::ofstream m_stream;
 
         void Trace_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(TRACE_LEVEL_STRING));
         }
 
         void Debug_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(DEBUG_LEVEL_STRING));
         }
 
         void Info_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(INFO_LEVEL_STRING));
         }
 
         void Warn_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(WARN_LEVEL_STRING));
         }
 
         void Error_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(ERROR_LEVEL_STRING));
         }
 
         void Fatal_Internal(std::string_view msg) override {
-            WriteAndFlushStream(LogFormat::Get().Format(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING)));
+            WriteAndFlushStream(FORMAT_MAPPED_PARAMS_FOR_LEVEL(FATAL_LEVEL_STRING));
         }
 
         /**
@@ -74,10 +74,11 @@ namespace slfmt {
          * @note When flushing the stream, the message is written to the file immediately. So, if the program
          * crashes, the message will be written to the file before the crash.
          *
-         * @param msg The message to write.
+         * @param format_map The format map to write.
          */
-        void WriteAndFlushStream(std::string_view msg) {
-            m_stream.write(msg.data(), (std::streamsize) msg.size()).flush();
+        void WriteAndFlushStream(const std::unordered_map<std::string_view, std::string_view> &format_map) {
+            const auto msg = LogFormat::Get().Format(format_map);
+            m_stream.write(msg.data(), static_cast<std::streamsize>(msg.size())).flush();
         }
     };
 } // namespace slfmt

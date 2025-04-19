@@ -41,7 +41,6 @@ namespace slfmt {
     class LogManager {
     public:
         LogManager() = delete;
-
         ~LogManager() = delete;
 
         static std::unique_ptr<LoggerBase> GetLogger(const std::string_view &clazz) {
