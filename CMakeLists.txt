@@ -8,13 +8,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
 include(cmake/CPM.cmake)
+include(cmake/opt.cmake)
 
 # Include all the source headers of the library
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # Add the external dependencies
-#add_subdirectory(external/fmt)
-#add_subdirectory(external/miniz)
 CPMAddPackage("gh:fmtlib/fmt#11.1.4")
 CPMAddPackage("gh:richgel999/miniz#3.0.2")
 
